@@ -25,7 +25,8 @@ defmodule EQRCode.MixProject do
   defp package() do
     [
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/SiliconJungles/eqrcode"}
+      links: %{"GitHub" => "https://github.com/SiliconJungles/eqrcode"},
+      maintainers: ["siliconavengers"]
     ]
   end
 

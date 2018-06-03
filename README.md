@@ -26,10 +26,7 @@ For now, you can specify the color of the QR code in hexadecimal format, or the 
 
 Default options are `%{color: "#000", shape: "square"}`.
 
-## Installation (pending)
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `eqrcode` to your list of dependencies in `mix.exs`:
+## Installation
 
 ```elixir
 def deps do
@@ -39,10 +36,10 @@ def deps do
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/eqrcode](https://hexdocs.pm/eqrcode).
-
 ## Credits
 
 We reused most of the code from [sunboshan/qrcode](https://github.com/sunboshan/qrcode) to generate the matrix required to render the QR Code. We also reference [rqrcode](https://github.com/whomwah/rqrcode) on how to generate SVG from the QR Code matrix.
+
+## License
+
+This project is Licensed under the [MIT License](https://github.com/SiliconJungles/eqrcode/blob/master/LICENSE).
