@@ -45,4 +45,4 @@ be found at [https://hexdocs.pm/eqrcode](https://hexdocs.pm/eqrcode).
 
 ## Credits
 
-We reused most of the code from https://github.com/sunboshan/qrcode to generate the matrix required to render the QR Code. We also reference https://github.com/whomwah/rqrcode on how to generate SVG from the QR Code matrix.
+We reused most of the code from [sunboshan/qrcode](https://github.com/sunboshan/qrcode) to generate the matrix required to render the QR Code. We also reference [rqrcode](https://github.com/whomwah/rqrcode) on how to generate SVG from the QR Code matrix.
