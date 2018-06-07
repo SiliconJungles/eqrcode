@@ -1,7 +1,5 @@
 defmodule EQRCode.GaloisField do
-  @moduledoc """
-  Galios Field GF(256) functions.
-  """
+  @moduledoc false
 
   import Bitwise
 

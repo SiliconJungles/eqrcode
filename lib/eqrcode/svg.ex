@@ -1,6 +1,21 @@
 defmodule EQRCode.Svg do
   @moduledoc """
   Render the QR Code matrix in SVG format
+
+  ```elixir
+  qr_code_content
+  |> EQRCode.encode()
+  |> EQRCode.svg(%{color: "#cc6600", shape: "circle", width: 300})
+  ```
+
+  You can specify the following attributes of the QR code:
+
+  * `color`: In hexadecimal format. The default is `#000`
+  * `shape`: Only `square` or `circle`. The default is `square`
+  * `width`: The width of the QR code in pixel. Without the width attribute, the QR code size will be dynamically generated based on the input string.
+
+  Default options are `%{color: "#000", shape: "square"}`.
+
   """
 
   @doc """
@@ -35,9 +50,24 @@ defmodule EQRCode.Svg do
   defp set_svg_options(options, matrix_size) do
     options
     |> Map.put_new(:color, "#000")
-    |> Map.put_new(:module_size, 11)
+    |> set_module_size(matrix_size)
     |> Map.put_new(:shape, "rectangle")
     |> Map.put_new(:size, matrix_size)
+  end
+
+  defp set_module_size(%{width: width} = options, matrix_size) when is_integer(width) do
+    options
+    |> Map.put_new(:module_size, width / matrix_size)
+  end
+
+  defp set_module_size(%{width: width} = options, matrix_size) when is_binary(width) do
+    options
+    |> Map.put_new(:module_size, String.to_integer(width) / matrix_size)
+  end
+
+  defp set_module_size(options, _matrix_size) do
+    options
+    |> Map.put_new(:module_size, 11)
   end
 
   defp format_row_as_svg(row_matrix, row_num, svg_options) do

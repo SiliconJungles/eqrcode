@@ -1,23 +1,5 @@
 defmodule EQRCode.Matrix do
-  @moduledoc """
-  EQRCode matrix functions.
-
-  Here's the axis for the matrix.
-  ```
-  (0,0)    (0,7)        (0,20)
-     +---------------------> y
-     |
-     |
-  (7,0)|     (7,7)
-     |
-     |
-     |
-     |
-     v
-     x
-  (20,0)                (20,20)
-  ```
-  """
+  @moduledoc false
 
   import Bitwise
 

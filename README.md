@@ -1,4 +1,4 @@
-# Eqrcode
+# EQRcode
 
 Simple QR Code Generator written in Elixir with no other dependencies.
 
@@ -19,10 +19,14 @@ You can also pass in options into `EQRCode.svg()`:
 ```elixir
 qr_code_content
 |> EQRCode.encode()
-|> EQRCode.svg(%{color: "#cc6600", shape: "circle"})
+|> EQRCode.svg(%{color: "#cc6600", shape: "circle", width: 300})
 ```
 
-For now, you can specify the color of the QR code in hexadecimal format, or the shape of each individual pixel. We only allow either square or circle for the shape option.
+You can specify the following attributes of the QR code:
+
+* `color`: In hexadecimal format. The default is `#000`
+* `shape`: Only `square` or `circle`. The default is `square`
+* `width`: The width of the QR code in pixel. Without the width attribute, the QR code size will be dynamically generated based on the input string.
 
 Default options are `%{color: "#000", shape: "square"}`.
 

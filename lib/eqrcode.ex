@@ -1,15 +1,16 @@
 defmodule EQRCode do
   @moduledoc """
-  QR Code implementation in Elixir.
+  Simple QR Code Generator written in Elixir with no other dependencies.
 
-  Spec:
-    - Version: 1 - 7
-    - ECC level: L
-    - Encoding mode: Byte
+  To generate the SVG QR code:
 
-  References:
-    - ISO/IEC 18004:2006(E)
-    - http://www.thonky.com/qr-code-tutorial/
+  ```elixir
+  qr_code_content = "your_qr_code_content"
+
+  qr_code_content
+  |> EQRCode.encode()
+  |> EQRCode.svg()
+  ```
   """
 
   @doc """
@@ -62,5 +63,20 @@ defmodule EQRCode do
 
   def encode(_, _), do: IO.puts("Binary too long.")
 
+  @doc """
+  ```elixir
+  qr_code_content
+  |> EQRCode.encode()
+  |> EQRCode.svg(%{color: "#cc6600", shape: "circle", width: 300})
+  ```
+
+  You can specify the following attributes of the QR code:
+
+  * `color`: In hexadecimal format. The default is `#000`
+  * `shape`: Only `square` or `circle`. The default is `square`
+  * `width`: The width of the QR code in pixel. Without the width attribute, the QR code size will be dynamically generated based on the input string.
+
+  Default options are `%{color: "#000", shape: "square"}`.
+  """
   defdelegate svg(matrix, options \\ %{}), to: EQRCode.Svg
 end

@@ -1,7 +1,5 @@
 defmodule EQRCode.Mask do
-  @moduledoc """
-  Data masking functions.
-  """
+  @moduledoc false
 
   @doc """
   Get the total score for the masked matrix.

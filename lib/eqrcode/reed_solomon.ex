@@ -1,7 +1,5 @@
 defmodule EQRCode.ReedSolomon do
-  @moduledoc """
-  Reed-Solomon Error Correction Coding.
-  """
+  @moduledoc false
 
   import Bitwise
 
