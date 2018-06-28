@@ -37,6 +37,10 @@ defmodule EQRCode do
     |> EQRCode.Matrix.draw_quite_zone()
   end
 
+  def encode(bin) when is_nil(bin) do
+    raise(ArgumentError, message: "you must pass in some input")
+  end
+
   def encode(_),
     do: raise(ArgumentError, message: "your input is too long. keep it under 155 characters")
 

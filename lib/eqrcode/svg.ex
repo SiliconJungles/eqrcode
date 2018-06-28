@@ -79,6 +79,15 @@ defmodule EQRCode.Svg do
     |> Enum.to_list()
   end
 
+  defp substitute(data, row_num, col_num, svg_options) when is_nil(data) do
+    y = col_num * svg_options[:module_size]
+    x = row_num * svg_options[:module_size]
+
+    ~s(<rect width="#{svg_options[:module_size]}" height="#{svg_options[:module_size]}" x="#{x}" y="#{
+      y
+    }" style="fill:#fff"/>)
+  end
+
   defp substitute(1, row_num, col_num, %{shape: "circle", size: size} = svg_options) do
     y = col_num * svg_options[:module_size]
     x = row_num * svg_options[:module_size]
