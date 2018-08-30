@@ -58,9 +58,9 @@ defmodule EQRCode.ReedSolomon do
     gen_poly = generator_polynomial(error_code_len)
 
     data =
-      Stream.chunk(message, 8)
+      Stream.chunk_every(message, 8)
       |> Stream.map(&String.to_integer(Enum.join(&1), 2))
-      |> Stream.chunk(data_code_len)
+      |> Stream.chunk_every(data_code_len)
       |> Stream.map(&{&1, polynomial_division(&1, gen_poly, data_code_len)})
       |> Enum.unzip()
       |> Tuple.to_list()
