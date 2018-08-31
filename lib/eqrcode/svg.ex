@@ -26,7 +26,7 @@ defmodule EQRCode.SVG do
   @spec svg(Matrix.t(), Keyword.t()) :: String.t()
   def svg(%Matrix{matrix: matrix}, options \\ []) do
     matrix_size = matrix |> Tuple.to_list() |> Enum.count()
-    svg_options = options |> set_svg_options(matrix_size)
+    svg_options = options |> Map.new() |> set_svg_options(matrix_size)
     dimension = matrix_size * svg_options[:module_size]
 
     xml_tag = ~s(<?xml version="1.0" standalone="yes"?>)

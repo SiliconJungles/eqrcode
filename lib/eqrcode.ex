@@ -73,7 +73,7 @@ defmodule EQRCode do
   ```elixir
   qr_code_content
   |> EQRCode.encode()
-  |> EQRCode.svg(%{color: "#cc6600", shape: "circle", width: 300})
+  |> EQRCode.svg(color: "#cc6600", shape: "circle", width: 300)
   ```
 
   You can specify the following attributes of the QR code:
@@ -85,5 +85,5 @@ defmodule EQRCode do
 
   Default options are `%{color: "#000", shape: "square"}`.
   """
-  defdelegate svg(matrix, options \\ %{}), to: EQRCode.SVG
+  defdelegate svg(matrix, options \\ []), to: EQRCode.SVG
 end
