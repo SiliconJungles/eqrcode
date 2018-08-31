@@ -35,7 +35,7 @@ Default options are `%{color: "#000", shape: "square"}`.
 ```elixir
 def deps do
   [
-    {:eqrcode, "~> 0.1.1"}
+    {:eqrcode, "~> 0.1.2"}
   ]
 end
 ```
