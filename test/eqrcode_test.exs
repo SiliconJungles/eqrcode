@@ -1,6 +1,5 @@
 defmodule EQRCodeTest do
   use ExUnit.Case
-  doctest EQRCode
 
   describe "encoder" do
     @sample_matrix {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
