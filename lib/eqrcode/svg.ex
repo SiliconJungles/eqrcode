@@ -1,4 +1,4 @@
-defmodule EQRCode.Svg do
+defmodule EQRCode.SVG do
   @moduledoc """
   Render the QR Code matrix in SVG format
 
