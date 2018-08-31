@@ -21,7 +21,7 @@ defmodule EQRCode.GaloisField do
   Given alpha exponent returns integer.
 
   Example:
-      iex> QRCode.GaloisField.to_i(1)
+      iex> EQRCode.GaloisField.to_i(1)
       2
   """
   @spec to_i(integer) :: integer
@@ -33,7 +33,7 @@ defmodule EQRCode.GaloisField do
   Given integer returns alpha exponent.
 
   Example:
-      iex> QRCode.GaloisField.to_a(2)
+      iex> EQRCode.GaloisField.to_a(2)
       1
   """
   @spec to_a(integer) :: integer
