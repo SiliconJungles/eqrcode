@@ -33,9 +33,9 @@ defmodule EQRCode.SVG do
 
     dimension_attrs =
       if Keyword.get(options, :viewbox, false) do
-        ~s(width="#{dimension}" height="#{dimension}")
-      else
         ~s(viewBox="0 0 #{dimension} #{dimension}")
+      else
+        ~s(width="#{dimension}" height="#{dimension}")
       end
 
     open_tag =
