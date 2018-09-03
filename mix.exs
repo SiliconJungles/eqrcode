@@ -11,7 +11,8 @@ defmodule EQRCode.MixProject do
       description: "Simple QRCode Generator in Elixir",
       source_url: "https://github.com/SiliconJungles/eqrcode",
       package: package(),
-      deps: deps()
+      deps: deps(),
+      docs: docs()
     ]
   end
 
@@ -27,6 +28,15 @@ defmodule EQRCode.MixProject do
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/SiliconJungles/eqrcode"},
       maintainers: ["siliconavengers"]
+    ]
+  end
+
+  defp docs do
+    [
+      main: "readme",
+      extras: [
+        "README.md"
+      ]
     ]
   end
 

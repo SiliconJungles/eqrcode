@@ -19,7 +19,7 @@ You can also pass in options into `EQRCode.svg()`:
 ```elixir
 qr_code_content
 |> EQRCode.encode()
-|> EQRCode.svg(%{color: "#cc6600", shape: "circle", width: 300})
+|> EQRCode.svg(color: "#cc6600", shape: "circle", width: 300)
 ```
 
 You can specify the following attributes of the QR code:
@@ -27,8 +27,9 @@ You can specify the following attributes of the QR code:
 * `color`: In hexadecimal format. The default is `#000`
 * `shape`: Only `square` or `circle`. The default is `square`
 * `width`: The width of the QR code in pixel. Without the width attribute, the QR code size will be dynamically generated based on the input string.
+* `viewbox`: When set to `true`, the SVG element will specify its height and width using `viewBox`, instead of explicit `height` and `width` tags.
 
-Default options are `%{color: "#000", shape: "square"}`.
+Default options are `[color: "#000", shape: "square"]`.
 
 ## Installation
 
