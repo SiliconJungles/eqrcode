@@ -13,28 +13,30 @@ defmodule EQRCode do
   ```
   """
 
+  alias EQRCode.{Encode, ReedSolomon, Matrix}
+
   @doc """
   Encode the binary.
   """
-  @spec encode(binary) :: EQRCode.Matrix.t()
+  @spec encode(binary) :: Matrix.t()
   def encode(bin) when byte_size(bin) <= 154 do
     data =
-      EQRCode.Encode.encode(bin)
-      |> EQRCode.ReedSolomon.encode()
+      Encode.encode(bin)
+      |> ReedSolomon.encode()
 
-    EQRCode.Encode.version(bin)
-    |> EQRCode.Matrix.new()
-    |> EQRCode.Matrix.draw_finder_patterns()
-    |> EQRCode.Matrix.draw_seperators()
-    |> EQRCode.Matrix.draw_alignment_patterns()
-    |> EQRCode.Matrix.draw_timing_patterns()
-    |> EQRCode.Matrix.draw_dark_module()
-    |> EQRCode.Matrix.draw_reserved_format_areas()
-    |> EQRCode.Matrix.draw_reserved_version_areas()
-    |> EQRCode.Matrix.draw_data_with_mask(data)
-    |> EQRCode.Matrix.draw_format_areas()
-    |> EQRCode.Matrix.draw_version_areas()
-    |> EQRCode.Matrix.draw_quite_zone()
+    Encode.version(bin)
+    |> Matrix.new()
+    |> Matrix.draw_finder_patterns()
+    |> Matrix.draw_seperators()
+    |> Matrix.draw_alignment_patterns()
+    |> Matrix.draw_timing_patterns()
+    |> Matrix.draw_dark_module()
+    |> Matrix.draw_reserved_format_areas()
+    |> Matrix.draw_reserved_version_areas()
+    |> Matrix.draw_data_with_mask(data)
+    |> Matrix.draw_format_areas()
+    |> Matrix.draw_version_areas()
+    |> Matrix.draw_quite_zone()
   end
 
   def encode(bin) when is_nil(bin) do
@@ -47,22 +49,22 @@ defmodule EQRCode do
   @doc """
   Encode the binary with custom pattern bits. Only supports version 5.
   """
-  @spec encode(binary, bitstring) :: EQRCode.Matrix.t()
+  @spec encode(binary, bitstring) :: Matrix.t()
   def encode(bin, bits) when byte_size(bin) <= 106 do
     data =
-      EQRCode.Encode.encode(bin, bits)
-      |> EQRCode.ReedSolomon.encode()
+      Encode.encode(bin, bits)
+      |> ReedSolomon.encode()
 
-    EQRCode.Matrix.new(5)
-    |> EQRCode.Matrix.draw_finder_patterns()
-    |> EQRCode.Matrix.draw_seperators()
-    |> EQRCode.Matrix.draw_alignment_patterns()
-    |> EQRCode.Matrix.draw_timing_patterns()
-    |> EQRCode.Matrix.draw_dark_module()
-    |> EQRCode.Matrix.draw_reserved_format_areas()
-    |> EQRCode.Matrix.draw_data_with_mask0(data)
-    |> EQRCode.Matrix.draw_format_areas()
-    |> EQRCode.Matrix.draw_quite_zone()
+    Matrix.new(5)
+    |> Matrix.draw_finder_patterns()
+    |> Matrix.draw_seperators()
+    |> Matrix.draw_alignment_patterns()
+    |> Matrix.draw_timing_patterns()
+    |> Matrix.draw_dark_module()
+    |> Matrix.draw_reserved_format_areas()
+    |> Matrix.draw_data_with_mask0(data)
+    |> Matrix.draw_format_areas()
+    |> Matrix.draw_quite_zone()
   end
 
   def encode(_, _), do: IO.puts("Binary too long.")
@@ -71,7 +73,7 @@ defmodule EQRCode do
   ```elixir
   qr_code_content
   |> EQRCode.encode()
-  |> EQRCode.svg(%{color: "#cc6600", shape: "circle", width: 300})
+  |> EQRCode.svg(color: "#cc6600", shape: "circle", width: 300)
   ```
 
   You can specify the following attributes of the QR code:
@@ -79,8 +81,9 @@ defmodule EQRCode do
   * `color`: In hexadecimal format. The default is `#000`
   * `shape`: Only `square` or `circle`. The default is `square`
   * `width`: The width of the QR code in pixel. Without the width attribute, the QR code size will be dynamically generated based on the input string.
+  * `viewbox`: When set to `true`, the SVG element will specify its height and width using `viewBox`, instead of explicit `height` and `width` tags.
 
-  Default options are `%{color: "#000", shape: "square"}`.
+  Default options are `[color: "#000", shape: "square"]`.
   """
-  defdelegate svg(matrix, options \\ %{}), to: EQRCode.Svg
+  defdelegate svg(matrix, options \\ []), to: EQRCode.SVG
 end

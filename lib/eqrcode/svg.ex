@@ -1,11 +1,11 @@
-defmodule EQRCode.Svg do
+defmodule EQRCode.SVG do
   @moduledoc """
   Render the QR Code matrix in SVG format
 
   ```elixir
   qr_code_content
   |> EQRCode.encode()
-  |> EQRCode.svg(%{color: "#cc6600", shape: "circle", width: 300})
+  |> EQRCode.svg(color: "#cc6600", shape: "circle", width: 300)
   ```
 
   You can specify the following attributes of the QR code:
@@ -18,20 +18,32 @@ defmodule EQRCode.Svg do
 
   """
 
+  alias EQRCode.Matrix
+
   @doc """
   Return the SVG format of the QR Code
   """
-  def svg(%EQRCode.Matrix{matrix: matrix}, options) do
+  @spec svg(Matrix.t(), map() | Keyword.t()) :: String.t()
+  def svg(%Matrix{matrix: matrix}, options \\ []) do
+    options = options |> Enum.map(& &1)
     matrix_size = matrix |> Tuple.to_list() |> Enum.count()
-    svg_options = options |> set_svg_options(matrix_size)
+    svg_options = options |> Map.new() |> set_svg_options(matrix_size)
     dimension = matrix_size * svg_options[:module_size]
 
     xml_tag = ~s(<?xml version="1.0" standalone="yes"?>)
 
+    dimension_attrs =
+      if Keyword.get(options, :viewbox, false) do
+        ~s(viewBox="0 0 #{dimension} #{dimension}")
+      else
+        ~s(width="#{dimension}" height="#{dimension}")
+      end
+
     open_tag =
-      ~s(<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" width="#{
-        dimension
-      }" height="#{dimension}" shape-rendering="crispEdges">)
+      ~s(<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" #{
+        dimension_attrs
+      }
+      shape-rendering="crispEdges">)
 
     close_tag = ~s(</svg>)
 

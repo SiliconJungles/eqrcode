@@ -3,25 +3,8 @@ defmodule EQRCode.GaloisField do
 
   import Bitwise
 
-  @doc """
-  Given alpha exponent returns integer.
-
-  Example:
-      iex> QRCode.GaloisField.to_i(1)
-      2
-  """
-  @spec to_i(integer) :: integer
-  def to_i(alpha)
-
-  @doc """
-  Given integer returns alpha exponent.
-
-  Example:
-      iex> QRCode.GaloisField.to_a(2)
-      1
-  """
-  @spec to_a(integer) :: integer
-  def to_a(integer)
+  @integers %{}
+  @alphas %{}
 
   Stream.iterate(1, fn e ->
     n = e <<< 1
@@ -30,7 +13,31 @@ defmodule EQRCode.GaloisField do
   |> Stream.take(256)
   |> Stream.with_index()
   |> Enum.each(fn {e, i} ->
-    def to_i(unquote(i)), do: unquote(e)
-    def to_a(unquote(e)), do: unquote(i)
+    Module.put_attribute(__MODULE__, :alphas, Map.put(@alphas, e, i))
+    Module.put_attribute(__MODULE__, :integers, Map.put(@integers, i, e))
   end)
+
+  @doc """
+  Given alpha exponent returns integer.
+
+  Example:
+      iex> EQRCode.GaloisField.to_i(1)
+      2
+  """
+  @spec to_i(integer) :: integer
+  def to_i(alpha) do
+    @integers[alpha]
+  end
+
+  @doc """
+  Given integer returns alpha exponent.
+
+  Example:
+      iex> EQRCode.GaloisField.to_a(2)
+      1
+  """
+  @spec to_a(integer) :: integer
+  def to_a(integer) do
+    @alphas[integer]
+  end
 end
