@@ -83,7 +83,7 @@ defmodule EQRCode do
   * `width`: The width of the QR code in pixel. Without the width attribute, the QR code size will be dynamically generated based on the input string.
   * `viewbox`: When set to `true`, the SVG element will specify its height and width using `viewBox`, instead of explicit `height` and `width` tags.
 
-  Default options are `%{color: "#000", shape: "square"}`.
+  Default options are `[color: "#000", shape: "square"]`.
   """
   defdelegate svg(matrix, options \\ []), to: EQRCode.SVG
 end
