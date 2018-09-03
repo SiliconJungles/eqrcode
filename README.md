@@ -21,7 +21,7 @@ You can also pass in options into `EQRCode.svg()`:
 ```elixir
 qr_code_content
 |> EQRCode.encode()
-|> EQRCode.svg(color: "#cc6600", shape: "circle", width: 300)
+|> EQRCode.svg(color: "#03B6AD", shape: "circle", width: 300)
 ```
 
 <img src="./screenshots/circle-color.png?raw=true" width="300">
