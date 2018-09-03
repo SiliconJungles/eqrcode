@@ -40,7 +40,7 @@ Default options are `[color: "#000", shape: "square"]`.
 ```elixir
 def deps do
   [
-    {:eqrcode, "~> 0.1.3"}
+    {:eqrcode, "~> 0.1.4"}
   ]
 end
 ```
