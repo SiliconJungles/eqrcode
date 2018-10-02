@@ -29,7 +29,7 @@ qr_code_content
 |> EQRCode.encode()
 |> EQRCode.png()
 ```
-<img src="./screenshots/default.png?raw=true" width="300">
+<img src="./screenshots/default.png" width="300">
 
 Note that the PNG format is only the binary. You still have to write the data to a file:
 
@@ -56,7 +56,7 @@ qr_code_content
 |> EQRCode.svg(color: "#03B6AD", shape: "circle", width: 300)
 ```
 
-<img src="./screenshots/circle-color.png?raw=true" width="300">
+<img src="./screenshots/circle-color.png" width="300">
 
 You can specify the following attributes of the QR code:
 
