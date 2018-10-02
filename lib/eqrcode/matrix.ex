@@ -419,4 +419,12 @@ defmodule EQRCode.Matrix do
   defp available?(matrix, {x, y}) do
     get_in(matrix, [Access.elem(x), Access.elem(y)]) == nil
   end
+
+  @doc """
+  Get matrix size.
+  """
+  @spec size(t()) :: integer()
+  def size(%__MODULE__{matrix: matrix}) do
+    matrix |> Tuple.to_list() |> Enum.count()
+  end
 end

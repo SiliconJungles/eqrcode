@@ -86,4 +86,21 @@ defmodule EQRCode do
   Default options are `[color: "#000", shape: "square"]`.
   """
   defdelegate svg(matrix, options \\ []), to: EQRCode.SVG
+
+
+  @doc """
+  ```elixir
+  qr_code_content
+  |> EQRCode.encode()
+  |> EQRCode.png(color: <<255, 0, 255>>, width: 200)
+  ```
+
+  You can specify the following attributes of the QR code:
+
+  * `color`: In binary format. The default is `<<0, 0, 0>>`
+  * `width`: The width of the QR code in pixel. (the actual size may vary, due to the number of modules in the code)
+
+  By default, QR code size will be dynamically generated based on the input string.
+  """
+  defdelegate png(matrix, options \\ []), to: EQRCode.PNG
 end

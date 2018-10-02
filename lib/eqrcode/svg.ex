@@ -25,9 +25,9 @@ defmodule EQRCode.SVG do
   Return the SVG format of the QR Code
   """
   @spec svg(Matrix.t(), map() | Keyword.t()) :: String.t()
-  def svg(%Matrix{matrix: matrix}, options \\ []) do
+  def svg(%Matrix{matrix: matrix} = m, options \\ []) do
     options = options |> Enum.map(& &1)
-    matrix_size = matrix |> Tuple.to_list() |> Enum.count()
+    matrix_size = Matrix.size(m)
     svg_options = options |> Map.new() |> set_svg_options(matrix_size)
     dimension = matrix_size * svg_options[:module_size]
 
