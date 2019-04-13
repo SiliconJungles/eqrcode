@@ -81,6 +81,10 @@ defmodule EQRCode.PNG do
     :binary.copy(<<0>> <> pixels, module_size)
   end
 
+  defp module_pixels(nil, %{module_size: module_size}) do
+    :binary.copy(<<255, 255, 255>>, module_size)
+  end
+
   defp module_pixels(0, %{module_size: module_size}) do
     :binary.copy(<<255, 255, 255>>, module_size)
   end
