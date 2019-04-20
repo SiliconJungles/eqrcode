@@ -6,11 +6,13 @@ defmodule EQRCode.MixProject do
       app: :eqrcode,
       version: "0.1.6",
       elixir: "~> 1.6",
+      erlc_paths: ["lib"],
       start_permanent: Mix.env() == :prod,
       name: "EQRCode",
       description: "Simple QRCode Generator in Elixir",
       source_url: "https://github.com/SiliconJungles/eqrcode",
       package: package(),
+      aliases: aliases(),
       deps: deps(),
       docs: docs()
     ]
@@ -40,10 +42,18 @@ defmodule EQRCode.MixProject do
     ]
   end
 
+  defp aliases do
+    [
+      c: ["compile", "compile.erlang"],
+      run: ["compile.erlang", "run"]
+    ]
+  end
+
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ex_doc, "~> 0.19", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.19", only: :dev, runtime: false},
+      {:qrcode, github: "SiliconJungles/elixir-qrcode"}
     ]
   end
 end
