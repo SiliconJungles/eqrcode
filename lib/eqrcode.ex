@@ -87,7 +87,6 @@ defmodule EQRCode do
   """
   defdelegate svg(matrix, options \\ []), to: EQRCode.SVG
 
-
   @doc """
   ```elixir
   qr_code_content
@@ -103,4 +102,13 @@ defmodule EQRCode do
   By default, QR code size will be dynamically generated based on the input string.
   """
   defdelegate png(matrix, options \\ []), to: EQRCode.PNG
+
+  @doc """
+  ```elixir
+  qr_code_content
+  |> EQRCode.encode()
+  |> EQRCode.render()
+  ```
+  """
+  defdelegate render(matrix), to: EQRCode.Render
 end
