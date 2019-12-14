@@ -14,7 +14,7 @@ defmodule EQRCode.PNGTest do
 
   test "Generate an html page with different types of PNG images", %{qr: qr} do
     color = <<0, 0, 255>>
-    background_color = <<255, 0, 0>>
+    background_color = <<255, 255, 0>>
 
     pngs =
       []

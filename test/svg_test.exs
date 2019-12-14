@@ -12,7 +12,7 @@ defmodule EQRCode.SVGTest do
 
   test "Generate an html page with different types of SVG images", %{qr: qr} do
     color = "blue"
-    background_color = "red"
+    background_color = "yellow"
 
     svgs =
       []
