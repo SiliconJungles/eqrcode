@@ -10,6 +10,7 @@ defmodule EQRCode.SVG do
 
   You can specify the following attributes of the QR code:
 
+  * `background_color`: In hexadecimal format or `:transparent`. The default is `#FFF`
   * `color`: In hexadecimal format. The default is `#000`
   * `shape`: Only `square` or `circle`. The default is `square`
   * `width`: The width of the QR code in pixel. Without the width attribute, the QR code size will be dynamically generated based on the input string.
@@ -44,7 +45,7 @@ defmodule EQRCode.SVG do
       ~s(<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" #{
         dimension_attrs
       }
-      shape-rendering="crispEdges">)
+      shape-rendering="crispEdges" style="background-color: #{svg_options[:background_color]}">)
 
     close_tag = ~s(</svg>)
 
@@ -62,6 +63,7 @@ defmodule EQRCode.SVG do
 
   defp set_svg_options(options, matrix_size) do
     options
+    |> Map.put_new(:background_color, "#FFF")
     |> Map.put_new(:color, "#000")
     |> set_module_size(matrix_size)
     |> Map.put_new(:shape, "rectangle")
@@ -92,13 +94,13 @@ defmodule EQRCode.SVG do
     |> Enum.to_list()
   end
 
-  defp substitute(data, row_num, col_num, svg_options) when is_nil(data) do
+  defp substitute(data, row_num, col_num, %{background_color: background_color} = svg_options) when is_nil(data) do
     y = col_num * svg_options[:module_size]
     x = row_num * svg_options[:module_size]
 
     ~s(<rect width="#{svg_options[:module_size]}" height="#{svg_options[:module_size]}" x="#{x}" y="#{
       y
-    }" style="fill:#fff"/>)
+    }" style="fill:#{background_color}"/>)
   end
 
   defp substitute(1, row_num, col_num, %{shape: "circle", size: size} = svg_options) do
@@ -126,12 +128,12 @@ defmodule EQRCode.SVG do
     }" style="fill:#{svg_options[:color]}"/>)
   end
 
-  defp substitute(0, row_num, col_num, svg_options) do
+  defp substitute(0, row_num, col_num, %{background_color: background_color} = svg_options) do
     y = col_num * svg_options[:module_size]
     x = row_num * svg_options[:module_size]
 
     ~s(<rect width="#{svg_options[:module_size]}" height="#{svg_options[:module_size]}" x="#{x}" y="#{
       y
-    }" style="fill:#fff"/>)
+    }" style="fill:#{background_color}"/>)
   end
 end
