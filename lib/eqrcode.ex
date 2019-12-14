@@ -87,7 +87,6 @@ defmodule EQRCode do
   """
   defdelegate svg(matrix, options \\ []), to: EQRCode.SVG
 
-
   @doc """
   ```elixir
   qr_code_content

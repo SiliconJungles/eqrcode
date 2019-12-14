@@ -10,7 +10,7 @@ defmodule EQRCode.PNG do
 
   You can specify the following attributes of the QR code:
 
-  * `background_color`: In binary format. The default is `<<255, 255, 255>>`
+  * `background_color`: In binary format or `:transparent`. The default is `<<255, 255, 255>>`
   * `color`: In binary format. The default is `<<0, 0, 0>>`
   * `width`: The width of the QR code in pixel. (the actual size may vary, due to the number of modules in the code)
 
@@ -25,6 +25,9 @@ defmodule EQRCode.PNG do
     module_size: 11
   }
 
+  @transparent_alpha <<0>>
+  @opaque_alpha <<255>>
+
   @png_signature <<137, 80, 78, 71, 13, 10, 26, 10>>
 
   @doc """
@@ -36,7 +39,7 @@ defmodule EQRCode.PNG do
     options = normalize_options(options, matrix_size)
     pixel_size = matrix_size * options[:module_size]
 
-    ihdr = png_chunk("IHDR", <<pixel_size::32, pixel_size::32, 8::8, 2::8, 0::24>>)
+    ihdr = png_chunk("IHDR", <<pixel_size::32, pixel_size::32, 8::8, 6::8, 0::24>>)
     idat = png_chunk("IDAT", pixels(matrix, options))
     iend = png_chunk("IEND", "")
 
@@ -85,10 +88,17 @@ defmodule EQRCode.PNG do
 
   defp module_pixels(value, %{background_color: background_color, module_size: module_size})
        when is_nil(value) or value == 0 do
-    :binary.copy(background_color, module_size)
+    background_color
+    |> apply_alpha_channel()
+    |> :binary.copy(module_size)
   end
 
   defp module_pixels(1, %{color: color, module_size: module_size}) do
-    :binary.copy(color, module_size)
+    color
+    |> apply_alpha_channel()
+    |> :binary.copy(module_size)
   end
+
+  defp apply_alpha_channel(:transparent), do: <<0, 0, 0>> <> @transparent_alpha
+  defp apply_alpha_channel(color), do: color <> @opaque_alpha
 end
