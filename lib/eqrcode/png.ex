@@ -10,6 +10,7 @@ defmodule EQRCode.PNG do
 
   You can specify the following attributes of the QR code:
 
+  * `background_color`: In binary format. The default is `<<255, 255, 255>>`
   * `color`: In binary format. The default is `<<0, 0, 0>>`
   * `width`: The width of the QR code in pixel. (the actual size may vary, due to the number of modules in the code)
 
@@ -19,6 +20,7 @@ defmodule EQRCode.PNG do
   alias EQRCode.Matrix
 
   @defaults %{
+    background_color: <<255, 255, 255>>,
     color: <<0, 0, 0>>,
     module_size: 11
   }
@@ -81,12 +83,9 @@ defmodule EQRCode.PNG do
     :binary.copy(<<0>> <> pixels, module_size)
   end
 
-  defp module_pixels(nil, %{module_size: module_size}) do
-    :binary.copy(<<255, 255, 255>>, module_size)
-  end
-
-  defp module_pixels(0, %{module_size: module_size}) do
-    :binary.copy(<<255, 255, 255>>, module_size)
+  defp module_pixels(value, %{background_color: background_color, module_size: module_size})
+       when is_nil(value) or value == 0 do
+    :binary.copy(background_color, module_size)
   end
 
   defp module_pixels(1, %{color: color, module_size: module_size}) do
