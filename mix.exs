@@ -4,7 +4,7 @@ defmodule EQRCode.MixProject do
   def project do
     [
       app: :eqrcode,
-      version: "0.1.6",
+      version: "0.1.7",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       name: "EQRCode",
