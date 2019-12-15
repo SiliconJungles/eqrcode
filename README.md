@@ -78,7 +78,7 @@ You can specify the following attributes of the QR code:
 
 By default, QR code size will be dynamically generated based on the input string.
 
-### ASCI
+### ASCII
 
 You can also render the QRCode in your console:
 
