@@ -24,3 +24,6 @@ eqrcode-*.tar
 
 **/.DS_Store
 .elixir_ls
+
+/test/images/
+/test/html/
