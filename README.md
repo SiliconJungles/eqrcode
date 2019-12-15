@@ -12,7 +12,7 @@ def deps do
 end
 ```
 
-## Using EQRCode
+## Using EQRCode (Basic Usage)
 
 You can use EQRCode to generate QR Code in SVG or PNG format.
 
@@ -53,7 +53,7 @@ You can pass in options into `EQRCode.svg()`:
 ```elixir
 qr_code_content
 |> EQRCode.encode()
-|> EQRCode.svg(color: "#03B6AD", shape: "circle", width: 300)
+|> EQRCode.svg(color: "#03B6AD", shape: "circle", width: 300, background_color: "#FFF")
 ```
 
 <img src="./screenshots/circle-color.png" width="300">
@@ -61,20 +61,32 @@ qr_code_content
 You can specify the following attributes of the QR code:
 
 * `color`: In hexadecimal format. The default is `#000`
+* `background_color`: In hexadecimal format or `:transparent`. The default is `#FFF`.
 * `shape`: Only `square` or `circle`. The default is `square`
 * `width`: The width of the QR code in pixel. Without the width attribute, the QR code size will be dynamically generated based on the input string.
 * `viewbox`: When set to `true`, the SVG element will specify its height and width using `viewBox`, instead of explicit `height` and `width` tags.
 
-Default options are `[color: "#000", shape: "square"]`.
+Default options are `[color: "#000", shape: "square", background_color: "#FFF"]`.
 
 ### PNG
 
 You can specify the following attributes of the QR code:
 
 * `color`: In binary format in the RGB order. The default is `<<0, 0, 0>>`
+* `background_color`: In binary format or `:transparent`. The default is `<<255, 255, 255>>`
 * `width`: The width of the QR code in pixel. (the actual size may vary, due to the number of modules in the code)
 
 By default, QR code size will be dynamically generated based on the input string.
+
+### ASCI
+
+You can also render the QRCode in your console:
+
+```elixir
+qr_code_content
+|> EQRCode.encode()
+|> EQRCode.render()
+```
 
 ## Credits
 

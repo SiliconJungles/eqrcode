@@ -78,12 +78,13 @@ defmodule EQRCode do
 
   You can specify the following attributes of the QR code:
 
+  * `background_color`: In hexadecimal format or `:transparent`. The default is `#FFF`
   * `color`: In hexadecimal format. The default is `#000`
   * `shape`: Only `square` or `circle`. The default is `square`
   * `width`: The width of the QR code in pixel. Without the width attribute, the QR code size will be dynamically generated based on the input string.
   * `viewbox`: When set to `true`, the SVG element will specify its height and width using `viewBox`, instead of explicit `height` and `width` tags.
 
-  Default options are `[color: "#000", shape: "square"]`.
+  Default options are `[color: "#000", shape: "square", background_color: "#FFF"]`.
   """
   defdelegate svg(matrix, options \\ []), to: EQRCode.SVG
 
@@ -97,6 +98,7 @@ defmodule EQRCode do
   You can specify the following attributes of the QR code:
 
   * `color`: In binary format. The default is `<<0, 0, 0>>`
+  * `background_color`: In binary format or `:transparent`. The default is `<<255, 255, 255>>`
   * `width`: The width of the QR code in pixel. (the actual size may vary, due to the number of modules in the code)
 
   By default, QR code size will be dynamically generated based on the input string.

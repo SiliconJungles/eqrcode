@@ -10,8 +10,8 @@ defmodule EQRCode.PNG do
 
   You can specify the following attributes of the QR code:
 
-  * `background_color`: In binary format or `:transparent`. The default is `<<255, 255, 255>>`
   * `color`: In binary format. The default is `<<0, 0, 0>>`
+  * `background_color`: In binary format or `:transparent`. The default is `<<255, 255, 255>>`
   * `width`: The width of the QR code in pixel. (the actual size may vary, due to the number of modules in the code)
 
   By default, QR code size will be dynamically generated based on the input string.
