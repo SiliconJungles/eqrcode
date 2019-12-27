@@ -50,22 +50,22 @@ defmodule EQRCode.PNGTest do
   defp gen_html(kw_png) when is_list(kw_png) do
     png =
       Enum.map(kw_png, fn {key, value} ->
-        ~s{<p><strong>#{key}:</strong></p><image src="#{value}">}
+        ~s{<p><strong>#{key}:</strong></p><img src="#{value}">}
       end)
 
     """
     <!DOCTYPE html>
-    <html xmlns="http://www.w3.org/1999/xhtml">
-        <body>
-            <head>
-                <title>EQRCode PNG Image Tests</title>
-                <style>
-                    body { background: rgba(0,255,0); }
-                </style>
-            </head>
-            #{png}
-        </body>
     <html>
+      <head>
+        <title>EQRCode PNG Image Tests</title>
+        <style>
+          body { background: rgba(0, 255, 0); }
+        </style>
+      </head>
+      <body>
+        #{png}
+      </body>
+    </html>
     """
   end
 end
