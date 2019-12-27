@@ -44,7 +44,8 @@ defmodule EQRCode.PNGTest do
     EQRCode.png(qr, opts)
     |> write_png_to_file(png_path)
 
-    png_list ++ [{label, png_path}]
+    png_relative_path = "../images/" <> Path.basename(png_path)
+    png_list ++ [{label, png_relative_path}]
   end
 
   defp gen_html(kw_png) when is_list(kw_png) do
