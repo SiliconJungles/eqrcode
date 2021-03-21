@@ -1,5 +1,6 @@
 defmodule EQRCodeTest do
   use ExUnit.Case
+  doctest EQRCode.Encode
 
   describe "encoder" do
     @sample_matrix {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -37,9 +38,9 @@ defmodule EQRCodeTest do
     end
 
     test "should return error when the input is too long" do
-      long_qr_content = String.duplicate("a", 160)
+      long_qr_content = String.duplicate("a", 2954)
 
-      assert_raise ArgumentError, "your input is too long. keep it under 155 characters", fn ->
+      assert_raise ArgumentError, "your input is too long. keep it under 2952 characters", fn ->
         long_qr_content |> EQRCode.encode()
       end
     end

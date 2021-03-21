@@ -27,3 +27,4 @@ eqrcode-*.tar
 
 /test/images/
 /test/html/
+.mix_tasks

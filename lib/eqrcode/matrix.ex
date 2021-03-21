@@ -1,15 +1,17 @@
 defmodule EQRCode.Matrix do
   @moduledoc false
 
+  alias EQRCode.SpecTable
+
   import Bitwise
 
-  defstruct [:version, :modules, :mask, :matrix]
+  @derive {Inspect, only: [:version, :error_correction_level, :modules, :mask]}
+  defstruct [:version, :error_correction_level, :modules, :mask, :matrix]
 
+  @type coordinate :: {non_neg_integer(), non_neg_integer()}
   @type matrix :: term
-  @type t :: %__MODULE__{version: integer, modules: integer, matrix: matrix}
-  @type coordinate :: {integer, integer}
+  @type t :: %__MODULE__{version: SpecTable.version(), error_correction_level: SpecTable.error_correction_level(), modules: integer, matrix: matrix}
 
-  @ecc_l 0b01
   @alignments %{
     1 => [],
     2 => [6, 18],
@@ -17,99 +19,78 @@ defmodule EQRCode.Matrix do
     4 => [6, 26],
     5 => [6, 30],
     6 => [6, 34],
-    7 => [6, 22, 38]
+    7 => [6, 22, 38],
+    8 => [6, 24, 42],
+    9 => [6, 26, 46],
+    10 => [6, 28, 50],
+    11 => [6, 30, 54],
+    12 => [6, 32, 58],
+    13 => [6, 34, 62],
+    14 => [6, 26, 46, 66],
+    15 => [6, 26, 48, 70],
+    16 => [6, 26, 50, 74],
+    17 => [6, 30, 54, 78],
+    18 => [6, 30, 56, 82],
+    19 => [6, 30, 58, 86],
+    20 => [6, 34, 62, 90],
+    21 => [6, 28, 50, 72, 94],
+    22 => [6, 26, 50, 74, 98],
+    23 => [6, 30, 54, 78, 102],
+    24 => [6, 28, 54, 80, 106],
+    25 => [6, 32, 58, 84, 110],
+    26 => [6, 30, 58, 86, 114],
+    27 => [6, 34, 62, 90, 118],
+    28 => [6, 26, 50, 74, 98, 122],
+    29 => [6, 30, 54, 78, 102, 126],
+    30 => [6, 26, 52, 78, 104, 130],
+    31 => [6, 30, 56, 82, 108, 134],
+    32 => [6, 34, 60, 86, 112, 138],
+    33 => [6, 30, 58, 86, 114, 142],
+    34 => [6, 34, 62, 90, 118, 146],
+    35 => [6, 30, 54, 78, 102, 126, 150],
+    36 => [6, 24, 50, 76, 102, 128, 154],
+    37 => [6, 28, 54, 80, 106, 132, 158],
+    38 => [6, 32, 58, 84, 110, 136, 162],
+    39 => [6, 26, 54, 82, 110, 138, 166],
+    40 => [6, 30, 58, 86, 114, 142, 170]
   }
-  @finder_pattern [
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    0,
-    1,
-    1,
-    1,
-    0,
-    1,
-    1,
-    0,
-    1,
-    1,
-    1,
-    0,
-    1,
-    1,
-    0,
-    1,
-    1,
-    1,
-    0,
-    1,
-    1,
-    0,
-    0,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
-  ]
-  @alignment_pattern [
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    0,
-    1,
-    0,
-    1,
-    1,
-    0,
-    0,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
-  ]
+
+  @finder_pattern Code.eval_string("""
+                  [
+                    1, 1, 1, 1, 1, 1, 1,
+                    1, 0, 0, 0, 0, 0, 1,
+                    1, 0, 1, 1, 1, 0, 1,
+                    1, 0, 1, 1, 1, 0, 1,
+                    1, 0, 1, 1, 1, 0, 1,
+                    1, 0, 0, 0, 0, 0, 1,
+                    1, 1, 1, 1, 1, 1, 1
+                  ]
+                  """)
+                  |> elem(0)
+
+  @alignment_pattern Code.eval_string("""
+                     [
+                       1, 1, 1, 1, 1,
+                       1, 0, 0, 0, 1,
+                       1, 0, 1, 0, 1,
+                       1, 0, 0, 0, 1,
+                       1, 1, 1, 1, 1,
+                     ]
+                     """)
+                     |> elem(0)
 
   @doc """
   Initialize the matrix.
   """
-  @spec new(integer) :: t
-  def new(version) do
+  @spec new(SpecTable.version(), SpecTable.error_correction_level()) :: t
+  def new(version, error_correction_level \\ :l) do
     modules = (version - 1) * 4 + 21
 
     matrix =
       Tuple.duplicate(nil, modules)
       |> Tuple.duplicate(modules)
 
-    %__MODULE__{version: version, modules: modules, matrix: matrix}
+    %__MODULE__{version: version, error_correction_level: error_correction_level, modules: modules, matrix: matrix}
   end
 
   @doc """
@@ -305,8 +286,9 @@ defmodule EQRCode.Matrix do
   Fill the reserved format information areas.
   """
   @spec draw_format_areas(t) :: t
-  def draw_format_areas(%__MODULE__{matrix: matrix, modules: modules, mask: mask} = m) do
-    data = EQRCode.ReedSolomon.bch_encode(<<@ecc_l::2, mask::3>>)
+  def draw_format_areas(%__MODULE__{matrix: matrix, modules: modules, mask: mask, error_correction_level: ecl} = m) do
+    ecc_l = SpecTable.error_corretion_bits(ecl)
+    data = EQRCode.ReedSolomon.bch_encode(<<ecc_l::2, mask::3>>)
 
     matrix =
       [
@@ -331,8 +313,9 @@ defmodule EQRCode.Matrix do
   @spec draw_version_areas(t) :: t
   def draw_version_areas(%__MODULE__{version: version} = m) when version < 7, do: m
 
-  def draw_version_areas(%__MODULE__{matrix: matrix, modules: modules} = m) do
-    data = EQRCode.Encode.bits(<<0b000111110010010100::18>>)
+  def draw_version_areas(%__MODULE__{matrix: matrix, modules: modules, version: version} = m) do
+    version_information_bits = SpecTable.version_information_bits(version)
+    data = EQRCode.Encode.bits(<<version_information_bits::18>>)
     z = modules - 9
 
     matrix =
