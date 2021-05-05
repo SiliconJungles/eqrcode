@@ -15,17 +15,20 @@ defmodule EQRCode do
 
   alias EQRCode.{Encode, ReedSolomon, Matrix}
 
+  @type error_correction_level :: :l | :m | :q | :h
+
   @doc """
   Encode the binary.
   """
-  @spec encode(binary) :: Matrix.t()
-  def encode(bin) when byte_size(bin) <= 154 do
-    data =
-      Encode.encode(bin)
+  @spec encode(binary, error_correction_level()) :: Matrix.t()
+  def encode(bin, error_correction_level \\ :l)
+
+  def encode(bin, error_correction_level) when byte_size(bin) <= 2952 do
+    {version, error_correction_level, data} =
+      Encode.encode(bin, error_correction_level)
       |> ReedSolomon.encode()
 
-    Encode.version(bin)
-    |> Matrix.new()
+    Matrix.new(version, error_correction_level)
     |> Matrix.draw_finder_patterns()
     |> Matrix.draw_seperators()
     |> Matrix.draw_alignment_patterns()
@@ -39,23 +42,23 @@ defmodule EQRCode do
     |> Matrix.draw_quite_zone()
   end
 
-  def encode(bin) when is_nil(bin) do
+  def encode(bin, _error_correction_level) when is_nil(bin) do
     raise(ArgumentError, message: "you must pass in some input")
   end
 
-  def encode(_),
-    do: raise(ArgumentError, message: "your input is too long. keep it under 155 characters")
+  def encode(_, _),
+    do: raise(ArgumentError, message: "your input is too long. keep it under 2952 characters")
 
   @doc """
   Encode the binary with custom pattern bits. Only supports version 5.
   """
-  @spec encode(binary, bitstring) :: Matrix.t()
-  def encode(bin, bits) when byte_size(bin) <= 106 do
-    data =
-      Encode.encode(bin, bits)
+  @spec encode(binary, error_correction_level(), bitstring) :: Matrix.t()
+  def encode(bin, error_correction_level, bits) when byte_size(bin) <= 106 do
+    {version, error_correction_level, data} =
+      Encode.encode(bin, error_correction_level, bits)
       |> ReedSolomon.encode()
 
-    Matrix.new(5)
+    Matrix.new(version, error_correction_level)
     |> Matrix.draw_finder_patterns()
     |> Matrix.draw_seperators()
     |> Matrix.draw_alignment_patterns()
@@ -67,7 +70,7 @@ defmodule EQRCode do
     |> Matrix.draw_quite_zone()
   end
 
-  def encode(_, _), do: IO.puts("Binary too long.")
+  def encode(_, _, _), do: IO.puts("Binary too long.")
 
   @doc """
   ```elixir
