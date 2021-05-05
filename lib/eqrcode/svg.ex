@@ -33,12 +33,13 @@ defmodule EQRCode.SVG do
     dimension = matrix_size * svg_options[:module_size]
 
     xml_tag = ~s(<?xml version="1.0" standalone="yes"?>)
+    viewbox_attr = ~s(viewBox="0 0 #{matrix_size} #{matrix_size}")
 
     dimension_attrs =
       if Keyword.get(options, :viewbox, false) do
-        ~s(viewBox="0 0 #{dimension} #{dimension}")
+        viewbox_attr
       else
-        ~s(width="#{dimension}" height="#{dimension}")
+        ~s(width="#{dimension}" height="#{dimension}" #{viewbox_attr})
       end
 
     open_tag =
@@ -94,54 +95,50 @@ defmodule EQRCode.SVG do
     |> Enum.to_list()
   end
 
-  defp substitute(data, row_num, col_num, %{module_size: module_size})
+  defp substitute(data, row_num, col_num, %{})
        when is_nil(data) or data == 0 do
     %{}
-    |> Map.put(:height, module_size)
+    |> Map.put(:height, 1)
     |> Map.put(:style, "fill: transparent;")
-    |> Map.put(:width, module_size)
-    |> Map.put(:x, row_num * module_size)
-    |> Map.put(:y, col_num * module_size)
+    |> Map.put(:width, 1)
+    |> Map.put(:x, row_num)
+    |> Map.put(:y, col_num)
     |> draw_rect
   end
 
   # This pattern match ensures that the QR Codes positional markers are drawn 
   # as rectangles, regardless of the shape
-  defp substitute(1, row_num, col_num, %{color: color, module_size: module_size, size: size})
+  defp substitute(1, row_num, col_num, %{color: color, size: size})
        when (row_num <= 8 and col_num <= 8) or
               (row_num >= size - 9 and col_num <= 8) or
               (row_num <= 8 and col_num >= size - 9) do
     %{}
-    |> Map.put(:height, module_size)
+    |> Map.put(:height, 1)
     |> Map.put(:style, "fill:#{color};")
-    |> Map.put(:width, module_size)
-    |> Map.put(:x, col_num * module_size)
-    |> Map.put(:y, row_num * module_size)
+    |> Map.put(:width, 1)
+    |> Map.put(:x, col_num)
+    |> Map.put(:y, row_num)
     |> draw_rect
   end
 
-  defp substitute(1, row_num, col_num, %{
-         color: color,
-         module_size: module_size,
-         shape: "circle"
-       }) do
-    radius = module_size / 2.0
+  defp substitute(1, row_num, col_num, %{color: color, shape: "circle"}) do
+    radius = 0.5
 
     %{}
-    |> Map.put(:cx, row_num * module_size + radius)
-    |> Map.put(:cy, col_num * module_size + radius)
+    |> Map.put(:cx, row_num + radius)
+    |> Map.put(:cy, col_num + radius)
     |> Map.put(:r, radius)
     |> Map.put(:style, "fill:#{color};")
     |> draw_circle
   end
 
-  defp substitute(1, row_num, col_num, %{color: color, module_size: module_size}) do
+  defp substitute(1, row_num, col_num, %{color: color}) do
     %{}
-    |> Map.put(:height, module_size)
+    |> Map.put(:height, 1)
     |> Map.put(:style, "fill:#{color};")
-    |> Map.put(:width, module_size)
-    |> Map.put(:x, row_num * module_size)
-    |> Map.put(:y, col_num * module_size)
+    |> Map.put(:width, 1)
+    |> Map.put(:x, row_num)
+    |> Map.put(:y, col_num)
     |> draw_rect
   end
 

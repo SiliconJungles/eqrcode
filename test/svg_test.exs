@@ -53,16 +53,16 @@ defmodule EQRCode.SVGTest do
 
     """
     <!DOCTYPE html>
-    <html xmlns="http://www.w3.org/1999/xhtml">
-    <body>
-        <head>
-            <title>EQRCode PNG Image Tests</title>
-            <style>
-            body { background: rgba(0,255,0); }
-            </style>
-        </head>
+    <html>
+      <head>
+        <title>EQRCode SVG Image Tests</title>
+        <style>
+          body { background: rgba(0, 255, 0); }
+        </style>
+      </head>
+      <body>
         #{svg}
-    </body>
+      </body>
     <html>
     """
   end

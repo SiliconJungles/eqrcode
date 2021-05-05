@@ -44,28 +44,29 @@ defmodule EQRCode.PNGTest do
     EQRCode.png(qr, opts)
     |> write_png_to_file(png_path)
 
-    png_list ++ [{label, png_path}]
+    png_relative_path = "../images/" <> Path.basename(png_path)
+    png_list ++ [{label, png_relative_path}]
   end
 
   defp gen_html(kw_png) when is_list(kw_png) do
     png =
       Enum.map(kw_png, fn {key, value} ->
-        ~s{<p><strong>#{key}:</strong></p><image src="#{value}">}
+        ~s{<p><strong>#{key}:</strong></p><img src="#{value}">}
       end)
 
     """
     <!DOCTYPE html>
-    <html xmlns="http://www.w3.org/1999/xhtml">
-        <body>
-            <head>
-                <title>EQRCode PNG Image Tests</title>
-                <style>
-                    body { background: rgba(0,255,0); }
-                </style>
-            </head>
-            #{png}
-        </body>
     <html>
+      <head>
+        <title>EQRCode PNG Image Tests</title>
+        <style>
+          body { background: rgba(0, 255, 0); }
+        </style>
+      </head>
+      <body>
+        #{png}
+      </body>
+    </html>
     """
   end
 end
