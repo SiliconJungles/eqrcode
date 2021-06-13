@@ -7,6 +7,13 @@ defmodule EQRCode.Render do
 
   @doc """
   Render the QR Code to terminal.
+
+  ## Examples
+
+      qr_code_content
+      |> EQRCode.encode()
+      |> EQRCode.render()
+
   """
   @spec render(EQRCode.Matrix.t()) :: :ok
   def render(%EQRCode.Matrix{matrix: matrix}) do

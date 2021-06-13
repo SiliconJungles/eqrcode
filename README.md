@@ -29,7 +29,8 @@ qr_code_content
 |> EQRCode.encode()
 |> EQRCode.png()
 ```
-<img src="./screenshots/default.png" width="300">
+
+![screenshot-defaults](./assets/default.png)
 
 Note that the PNG format is only the binary. You still have to write the data to a file:
 
@@ -56,15 +57,21 @@ qr_code_content
 |> EQRCode.svg(color: "#03B6AD", shape: "circle", width: 300, background_color: "#FFF")
 ```
 
-<img src="./screenshots/circle-color.png" width="300">
+![screenshot-circle-color](./assets/circle-color.png)
 
 You can specify the following attributes of the QR code:
 
 * `color`: In hexadecimal format. The default is `#000`
+
 * `background_color`: In hexadecimal format or `:transparent`. The default is `#FFF`.
+
 * `shape`: Only `square` or `circle`. The default is `square`
-* `width`: The width of the QR code in pixel. Without the width attribute, the QR code size will be dynamically generated based on the input string.
-* `viewbox`: When set to `true`, the SVG element will specify its height and width using `viewBox`, instead of explicit `height` and `width` tags.
+
+* `width`: The width of the QR code in pixel. Without the width attribute, the
+  QR code size will be dynamically generated based on the input string.
+
+* `viewbox`: When set to `true`, the SVG element will specify its height and
+  width using `viewBox`, instead of explicit `height` and `width` tags.
 
 Default options are `[color: "#000", shape: "square", background_color: "#FFF"]`.
 
@@ -73,8 +80,12 @@ Default options are `[color: "#000", shape: "square", background_color: "#FFF"]`
 You can specify the following attributes of the QR code:
 
 * `color`: In binary format in the RGB order. The default is `<<0, 0, 0>>`
-* `background_color`: In binary format or `:transparent`. The default is `<<255, 255, 255>>`
-* `width`: The width of the QR code in pixel. (the actual size may vary, due to the number of modules in the code)
+
+* `background_color`: In binary format or `:transparent`. The default is
+  `<<255, 255, 255>>`
+
+* `width`: The width of the QR code in pixel. (the actual size may vary, due to
+  the number of modules in the code)
 
 By default, QR code size will be dynamically generated based on the input string.
 
@@ -92,6 +103,9 @@ qr_code_content
 
 We reused most of the code from [sunboshan/qrcode](https://github.com/sunboshan/qrcode) to generate the matrix required to render the QR Code. We also reference [rqrcode](https://github.com/whomwah/rqrcode) on how to generate SVG from the QR Code matrix.
 
-## License
+## Copyright and License
 
-This project is Licensed under the [MIT License](https://github.com/SiliconJungles/eqrcode/blob/master/LICENSE).
+Copyright (c) 2014 Silicon Jungles
+
+This library is released under the MIT License. See the
+[LICENSE.md](./LICENSE.md) file.

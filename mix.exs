@@ -1,15 +1,16 @@
 defmodule EQRCode.MixProject do
   use Mix.Project
 
+  @source_url "https://github.com/SiliconJungles/eqrcode"
+  @version "0.1.8"
+
   def project do
     [
       app: :eqrcode,
-      version: "0.1.8",
+      version: @version,
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       name: "EQRCode",
-      description: "Simple QRCode Generator in Elixir",
-      source_url: "https://github.com/SiliconJungles/eqrcode",
       package: package(),
       deps: deps(),
       docs: docs()
@@ -25,25 +26,31 @@ defmodule EQRCode.MixProject do
 
   defp package() do
     [
+      description: "Simple QRCode Generator in Elixir",
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/SiliconJungles/eqrcode"},
-      maintainers: ["siliconavengers"]
+      maintainers: ["siliconavengers"],
+      links: %{
+        "GitHub" => @source_url
+      }
     ]
   end
 
   defp docs do
     [
-      main: "readme",
       extras: [
-        "README.md"
-      ]
+        "LICENSE.md": [title: "License"],
+        "README.md": [title: "Overview"]
+      ],
+      main: "readme",
+      source_url: @source_url,
+      assets: "assets",
+      formatters: ["html"]
     ]
   end
 
-  # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ex_doc, "~> 0.24", only: :dev, runtime: false}
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end
 end

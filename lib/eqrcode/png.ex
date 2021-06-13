@@ -1,20 +1,6 @@
 defmodule EQRCode.PNG do
   @moduledoc """
-  Render the QR Code matrix in PNG format
-
-  ```elixir
-  qr_code_content
-  |> EQRCode.encode()
-  |> EQRCode.png()
-  ```
-
-  You can specify the following attributes of the QR code:
-
-  * `color`: In binary format. The default is `<<0, 0, 0>>`
-  * `background_color`: In binary format or `:transparent`. The default is `<<255, 255, 255>>`
-  * `width`: The width of the QR code in pixel. (the actual size may vary, due to the number of modules in the code)
-
-  By default, QR code size will be dynamically generated based on the input string.
+  Render the QR Code matrix in PNG format.
   """
 
   alias EQRCode.Matrix
@@ -31,7 +17,28 @@ defmodule EQRCode.PNG do
   @png_signature <<137, 80, 78, 71, 13, 10, 26, 10>>
 
   @doc """
-  Return the PNG binary representation of the QR Code
+  Returns the PNG binary representation of the QR Code
+
+  ## Options
+
+  You can specify the following attributes of the QR code:
+
+  * `:color` - In binary format. The default is `<<0, 0, 0>>`
+
+  * `:background_color` - In binary format or `:transparent`. The default is
+    `<<255, 255, 255>>`
+
+  * `:width` - The width of the QR code in pixel. (the actual size may vary, due
+    to the number of modules in the code)
+
+  By default, QR code size will be dynamically generated based on the input string.
+
+  ## Examples
+
+      qr_code_content
+      |> EQRCode.encode()
+      |> EQRCode.png(color: <<255, 0, 255>>, width: 200)
+
   """
   @spec png(Matrix.t(), map() | Keyword.t()) :: String.t()
   def png(%Matrix{matrix: matrix} = m, options \\ []) do

@@ -724,24 +724,28 @@ defmodule EQRCode.SpecTable do
   @ec_levels @table |> Enum.map(&elem(&1, 1)) |> Enum.uniq()
   @modes @table |> Enum.map(&elem(&1, 2)) |> Enum.uniq()
 
-  @spec find_version(non_neg_integer(), error_correction_level(), mode()) :: {:error, :no_version_found} | {:ok, version()}
+  @spec find_version(non_neg_integer(), error_correction_level(), mode()) ::
+          {:error, :no_version_found} | {:ok, version()}
   def find_version(bin_len, ec_level \\ :h, mode \\ :byte)
 
   for ec_level <- @ec_levels,
       mode <- @modes,
       {version, _, _, cap, _} <-
-        Enum.filter(@table, &match?({_, ^ec_level, ^mode, _, _}, &1)) |> Enum.sort_by(&elem(&1, 3)) do
+        Enum.filter(@table, &match?({_, ^ec_level, ^mode, _, _}, &1))
+        |> Enum.sort_by(&elem(&1, 3)) do
     def find_version(bin_len, unquote(ec_level), unquote(mode)) when bin_len <= unquote(cap),
       do: {:ok, unquote(version)}
   end
 
   def find_version(_bin_len, _ec_level, _mode), do: {:error, :no_version_found}
 
-  @spec character_count_indicator_bits(version(), error_correction_level(), mode()) :: non_neg_integer()
+  @spec character_count_indicator_bits(version(), error_correction_level(), mode()) ::
+          non_neg_integer()
   def character_count_indicator_bits(version, ec_level, mode \\ :byte)
 
   for {version, ec_level, mode, _, cci_len} <- @table do
-    def character_count_indicator_bits(unquote(version), unquote(ec_level), unquote(mode)), do: unquote(cci_len)
+    def character_count_indicator_bits(unquote(version), unquote(ec_level), unquote(mode)),
+      do: unquote(cci_len)
   end
 
   def character_count_indicator_bits(_version, _ec_level, _mode), do: 0
@@ -913,8 +917,10 @@ defmodule EQRCode.SpecTable do
   @spec code_words_len(version(), error_correction_level()) :: non_neg_integer()
   def code_words_len(version, error_correction_level)
 
-  for {version, error_correction_level, _, g1_blocks, g1_codewords, g2_blocks, g2_codewords} <- @error_correction_table do
-    def code_words_len(unquote(version), unquote(error_correction_level)), do: unquote(g1_blocks * g1_codewords + g2_blocks * g2_codewords)
+  for {version, error_correction_level, _, g1_blocks, g1_codewords, g2_blocks, g2_codewords} <-
+        @error_correction_table do
+    def code_words_len(unquote(version), unquote(error_correction_level)),
+      do: unquote(g1_blocks * g1_codewords + g2_blocks * g2_codewords)
   end
 
   def code_words_len(_version, _error_correction_level), do: 0
@@ -922,8 +928,10 @@ defmodule EQRCode.SpecTable do
   @spec ec_codewords_per_block(version(), error_correction_level()) :: non_neg_integer()
   def ec_codewords_per_block(version, error_correction_level)
 
-  for {version, error_correction_level, ec_codewords_per_block, _, _, _, _} <- @error_correction_table do
-    def ec_codewords_per_block(unquote(version), unquote(error_correction_level)), do: unquote(ec_codewords_per_block)
+  for {version, error_correction_level, ec_codewords_per_block, _, _, _, _} <-
+        @error_correction_table do
+    def ec_codewords_per_block(unquote(version), unquote(error_correction_level)),
+      do: unquote(ec_codewords_per_block)
   end
 
   def ec_codewords_per_block(_version, _error_correction_level), do: 0
@@ -932,7 +940,8 @@ defmodule EQRCode.SpecTable do
   def group1_block_len(version, error_correction_level)
 
   for {version, error_correction_level, _, group1_block_len, _, _, _} <- @error_correction_table do
-    def group1_block_len(unquote(version), unquote(error_correction_level)), do: unquote(group1_block_len)
+    def group1_block_len(unquote(version), unquote(error_correction_level)),
+      do: unquote(group1_block_len)
   end
 
   def group1_block_len(_version, _error_correction_level), do: 0
@@ -940,8 +949,10 @@ defmodule EQRCode.SpecTable do
   @spec group1_codewords_per_block(version(), error_correction_level()) :: non_neg_integer()
   def group1_codewords_per_block(version, error_correction_level)
 
-  for {version, error_correction_level, _, _, group1_codewords_per_block, _, _} <- @error_correction_table do
-    def group1_codewords_per_block(unquote(version), unquote(error_correction_level)), do: unquote(group1_codewords_per_block)
+  for {version, error_correction_level, _, _, group1_codewords_per_block, _, _} <-
+        @error_correction_table do
+    def group1_codewords_per_block(unquote(version), unquote(error_correction_level)),
+      do: unquote(group1_codewords_per_block)
   end
 
   def group1_codewords_per_block(_version, _error_correction_level), do: 0
@@ -950,7 +961,8 @@ defmodule EQRCode.SpecTable do
   def group2_block_len(version, error_correction_level)
 
   for {version, error_correction_level, _, _, _, group2_block_len, _} <- @error_correction_table do
-    def group2_block_len(unquote(version), unquote(error_correction_level)), do: unquote(group2_block_len)
+    def group2_block_len(unquote(version), unquote(error_correction_level)),
+      do: unquote(group2_block_len)
   end
 
   def group2_block_len(_version, _error_correction_level), do: 0
@@ -958,8 +970,10 @@ defmodule EQRCode.SpecTable do
   @spec group2_codewords_per_block(version(), error_correction_level()) :: non_neg_integer()
   def group2_codewords_per_block(version, error_correction_level)
 
-  for {version, error_correction_level, _, _, _, _, group2_codewords_per_block} <- @error_correction_table do
-    def group2_codewords_per_block(unquote(version), unquote(error_correction_level)), do: unquote(group2_codewords_per_block)
+  for {version, error_correction_level, _, _, _, _, group2_codewords_per_block} <-
+        @error_correction_table do
+    def group2_codewords_per_block(unquote(version), unquote(error_correction_level)),
+      do: unquote(group2_codewords_per_block)
   end
 
   def group2_codewords_per_block(_version, _error_correction_level), do: 0

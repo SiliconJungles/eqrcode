@@ -10,7 +10,12 @@ defmodule EQRCode.Matrix do
 
   @type coordinate :: {non_neg_integer(), non_neg_integer()}
   @type matrix :: term
-  @type t :: %__MODULE__{version: SpecTable.version(), error_correction_level: SpecTable.error_correction_level(), modules: integer, matrix: matrix}
+  @type t :: %__MODULE__{
+          version: SpecTable.version(),
+          error_correction_level: SpecTable.error_correction_level(),
+          modules: integer,
+          matrix: matrix
+        }
 
   @alignments %{
     1 => [],
@@ -90,7 +95,12 @@ defmodule EQRCode.Matrix do
       Tuple.duplicate(nil, modules)
       |> Tuple.duplicate(modules)
 
-    %__MODULE__{version: version, error_correction_level: error_correction_level, modules: modules, matrix: matrix}
+    %__MODULE__{
+      version: version,
+      error_correction_level: error_correction_level,
+      modules: modules,
+      matrix: matrix
+    }
   end
 
   @doc """
@@ -286,7 +296,9 @@ defmodule EQRCode.Matrix do
   Fill the reserved format information areas.
   """
   @spec draw_format_areas(t) :: t
-  def draw_format_areas(%__MODULE__{matrix: matrix, modules: modules, mask: mask, error_correction_level: ecl} = m) do
+  def draw_format_areas(
+        %__MODULE__{matrix: matrix, modules: modules, mask: mask, error_correction_level: ecl} = m
+      ) do
     ecc_l = SpecTable.error_corretion_bits(ecl)
     data = EQRCode.ReedSolomon.bch_encode(<<ecc_l::2, mask::3>>)
 
@@ -379,11 +391,13 @@ defmodule EQRCode.Matrix do
   Given the starting point {x, y} and {width, height}
   returns the coordinates of the shape.
 
-  Example:
+  ## Examples
+
       iex> EQRCode.Matrix.shape({0, 0}, {3, 3})
       [{0, 0}, {0, 1}, {0, 2},
        {1, 0}, {1, 1}, {1, 2},
        {2, 0}, {2, 1}, {2, 2}]
+
   """
   @spec shape(coordinate, {integer, integer}) :: [coordinate]
   def shape({x, y}, {w, h}) do

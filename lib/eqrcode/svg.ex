@@ -1,29 +1,37 @@
 defmodule EQRCode.SVG do
   @moduledoc """
   Render the QR Code matrix in SVG format
-
-  ```elixir
-  qr_code_content
-  |> EQRCode.encode()
-  |> EQRCode.svg(color: "#cc6600", shape: "circle", width: 300)
-  ```
-
-  You can specify the following attributes of the QR code:
-
-  * `background_color`: In hexadecimal format or `:transparent`. The default is `#FFF`
-  * `color`: In hexadecimal format. The default is `#000`
-  * `shape`: Only `square` or `circle`. The default is `square`
-  * `width`: The width of the QR code in pixel. Without the width attribute, the QR code size will be dynamically generated based on the input string.
-  * `viewbox`: When set to `true`, the SVG element will specify its height and width using `viewBox`, instead of explicit `height` and `width` tags.
-
-  Default options are `[color: "#000", shape: "square"]`.
-
   """
 
   alias EQRCode.Matrix
 
   @doc """
-  Return the SVG format of the QR Code
+  Returns the SVG format of the QR Code.
+
+  ## Options
+
+  You can specify the following attributes of the QR code:
+
+  * `:background_color` - In hexadecimal format or `:transparent`. The default is `#FFF`
+
+  * `:color` - In hexadecimal format. The default is `#000`
+
+  * `:shape` - Only `square` or `circle`. The default is `square`
+
+  * `:width` - The width of the QR code in pixel. Without the width attribute,
+    the QR code size will be dynamically generated based on the input string.
+
+  * `:viewbox` - When set to `true`, the SVG element will specify its height and
+    width using `viewBox`, instead of explicit `height` and `width` tags.
+
+  Default options are `[color: "#000", shape: "square", background_color: "#FFF"]`.
+
+  ## Examples
+
+      qr_code_content
+      |> EQRCode.encode()
+      |> EQRCode.svg(color: "#cc6600", shape: "circle", width: 300)
+
   """
   @spec svg(Matrix.t(), map() | Keyword.t()) :: String.t()
   def svg(%Matrix{matrix: matrix} = m, options \\ []) do
@@ -43,9 +51,7 @@ defmodule EQRCode.SVG do
       end
 
     open_tag =
-      ~s(<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" #{
-        dimension_attrs
-      }
+      ~s(<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" #{dimension_attrs}
       shape-rendering="crispEdges" style="background-color: #{svg_options[:background_color]}">)
 
     close_tag = ~s(</svg>)
@@ -106,7 +112,7 @@ defmodule EQRCode.SVG do
     |> draw_rect
   end
 
-  # This pattern match ensures that the QR Codes positional markers are drawn 
+  # This pattern match ensures that the QR Codes positional markers are drawn
   # as rectangles, regardless of the shape
   defp substitute(1, row_num, col_num, %{color: color, size: size})
        when (row_num <= 8 and col_num <= 8) or

@@ -10,9 +10,11 @@ defmodule EQRCode.ReedSolomon do
   @doc """
   Returns generator polynomials in alpha exponent for given error code length.
 
-  Example:
+  ## Examples
+
       iex> EQRCode.ReedSolomon.generator_polynomial(10)
       [0, 251, 67, 46, 61, 118, 70, 64, 94, 32, 45]
+
   """
   def generator_polynomial(error_code_len)
 
@@ -38,12 +40,15 @@ defmodule EQRCode.ReedSolomon do
   @doc """
   Reed-Solomon encode.
 
-  Example:
+  # Examples
+
       iex> EQRCode.ReedSolomon.encode(EQRCode.Encode.encode("hello world!", :l))
       {1, :l, <<64, 198, 134, 86, 198, 198, 242, 7, 118, 247, 38, 198, 66, 16,
         236, 17, 236, 17, 236, 45, 99, 25, 84, 35, 114, 46>>}
+
   """
-  @spec encode({SpecTable.version(), SpecTable.error_correction_level(), [0 | 1]}) :: {SpecTable.version(), SpecTable.error_correction_level(), bitstring()}
+  @spec encode({SpecTable.version(), SpecTable.error_correction_level(), [0 | 1]}) ::
+          {SpecTable.version(), SpecTable.error_correction_level(), bitstring()}
   def encode({version, error_correction_level, message}) do
     remainder_len = SpecTable.remainer(version)
 
@@ -106,21 +111,29 @@ defmodule EQRCode.ReedSolomon do
   end
 
   def interleave(data, acc \\ [])
-  def interleave({[], error_code_sec}, acc), do: interleave_sec(error_code_sec, acc) |> Enum.reverse()
+
+  def interleave({[], error_code_sec}, acc),
+    do: interleave_sec(error_code_sec, acc) |> Enum.reverse()
+
   def interleave({code_sec, ec}, acc), do: interleave({[], ec}, interleave_sec(code_sec, acc))
 
   @doc """
-  ## Example
-  iex> EQRCode.ReedSolomon.interleave_sec([[1, 2], [6, 7], [3, 4, 5], [8, 9, 10]], []) |> Enum.reverse()
-  [1, 6, 3, 8, 2, 7, 4, 9, 5, 10]
 
-  iex> EQRCode.ReedSolomon.interleave_sec([[]], [])
-  []
+  ## Examples
+
+      iex> EQRCode.ReedSolomon.interleave_sec([[1, 2], [6, 7], [3, 4, 5], [8, 9, 10]], []) |> Enum.reverse()
+      [1, 6, 3, 8, 2, 7, 4, 9, 5, 10]
+
+      iex> EQRCode.ReedSolomon.interleave_sec([[]], [])
+      []
+
   """
   def interleave_sec([], acc), do: acc
 
   def interleave_sec(data, acc) do
-    for [h | tail] <- data do {h, tail} end
+    for [h | tail] <- data do
+      {h, tail}
+    end
     |> Enum.unzip()
     |> case do
       {l, rest} -> interleave_sec(rest, Enum.concat(Enum.reverse(l), acc))
@@ -130,9 +143,11 @@ defmodule EQRCode.ReedSolomon do
   @doc """
   Perform the polynomial division.
 
-  Example:
+  # Examples
+
       iex> EQRCode.ReedSolomon.polynomial_division([64, 198, 134, 86, 198, 198, 242, 7, 118, 247, 38, 198, 66, 16, 236, 17, 236, 17, 236], [0, 87, 229, 146, 149, 238, 102, 21], 19)
       [45, 99, 25, 84, 35, 114, 46]
+
   """
   @spec polynomial_division(list, list, integer) :: list
   def polynomial_division(msg_poly, gen_poly, data_code_len) do
