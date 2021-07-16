@@ -20,12 +20,12 @@ defmodule EQRCode do
   @doc """
   Encode the binary.
   """
-  @spec encode(binary, error_correction_level()) :: Matrix.t()
-  def encode(bin, error_correction_level \\ :l)
+  @spec encode(binary, error_correction_level(), atom()) :: Matrix.t()
+  def encode(bin, error_correction_level \\ :l, mode \\ :byte)
 
-  def encode(bin, error_correction_level) when byte_size(bin) <= 2952 do
+  def encode(bin, error_correction_level, mode) when byte_size(bin) <= 2952 do
     {version, error_correction_level, data} =
-      Encode.encode(bin, error_correction_level)
+      Encode.encode(bin, error_correction_level, mode)
       |> ReedSolomon.encode()
 
     Matrix.new(version, error_correction_level)
@@ -42,18 +42,18 @@ defmodule EQRCode do
     |> Matrix.draw_quite_zone()
   end
 
-  def encode(bin, _error_correction_level) when is_nil(bin) do
+  def encode(bin, _error_correction_level, _mode) when is_nil(bin) do
     raise(ArgumentError, message: "you must pass in some input")
   end
 
-  def encode(_, _),
+  def encode(_, _, _),
     do: raise(ArgumentError, message: "your input is too long. keep it under 2952 characters")
 
   @doc """
   Encode the binary with custom pattern bits. Only supports version 5.
   """
-  @spec encode(binary, error_correction_level(), bitstring) :: Matrix.t()
-  def encode(bin, error_correction_level, bits) when byte_size(bin) <= 106 do
+  @spec encode_with_pattern(binary, error_correction_level(), bitstring) :: Matrix.t()
+  def encode_with_pattern(bin, error_correction_level, bits) when byte_size(bin) <= 106 do
     {version, error_correction_level, data} =
       Encode.encode(bin, error_correction_level, bits)
       |> ReedSolomon.encode()
@@ -70,7 +70,7 @@ defmodule EQRCode do
     |> Matrix.draw_quite_zone()
   end
 
-  def encode(_, _, _), do: IO.puts("Binary too long.")
+  def encode_with_pattern(_, _, _), do: IO.puts("Binary too long.")
 
   @doc """
   ```elixir

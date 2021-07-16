@@ -23,14 +23,21 @@ defmodule EQRCode.Encode do
        0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1,
        1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0]}
   """
-  @spec encode(binary, SpecTable.error_correction_level()) :: {SpecTable.version(), SpecTable.error_correction_level(), [0 | 1]}
-  def encode(bin, error_correction_level) when error_correction_level in @error_correction_level do
-    {:ok, version} = version(bin, error_correction_level)
-    cci_len = SpecTable.character_count_indicator_bits(version, error_correction_level)
-    mode = SpecTable.mode_indicator()
-
+  @spec encode(binary(), SpecTable.error_correction_level(), atom()) :: {SpecTable.version(), SpecTable.error_correction_level(), [0 | 1]}
+  def encode(input, error_correction_level, mode \\ :byte) when error_correction_level in @error_correction_level do
+    bin =
+      case mode do
+        :byte ->
+          input
+        :alphanumeric ->
+          EQRCode.Alphanumeric.from_binary(input)
+      end
+    {:ok, version} = version(input, error_correction_level, mode)
+    cci_len = SpecTable.character_count_indicator_bits(version, error_correction_level, mode)
+    mode_ind = SpecTable.mode_indicator(mode)
+    term_count = min(SpecTable.code_words_len(version, error_correction_level) * 8 - (4 + cci_len + bit_size(bin)), 4)
     encoded =
-      [<<mode::4>>, <<byte_size(bin)::size(cci_len)>>, bin, <<0::4>>]
+      [<<mode_ind::4>>, <<byte_size(input)::size(cci_len)>>, bin, <<0::size(term_count)>>]
       |> Enum.flat_map(&bits/1)
       |> pad_bytes(version, error_correction_level)
 
@@ -38,8 +45,8 @@ defmodule EQRCode.Encode do
   end
 
   # Encode the binary with custom pattern bits.
-  @spec encode(binary, SpecTable.error_correction_level(), bitstring) :: {SpecTable.version(), SpecTable.error_correction_level(), [0 | 1]}
-  def encode(bin, error_correction_level, bits) when error_correction_level in @error_correction_level do
+  @spec encode_with_pattern(binary, SpecTable.error_correction_level(), bitstring) :: {SpecTable.version(), SpecTable.error_correction_level(), [0 | 1]}
+  def encode_with_pattern(bin, error_correction_level, bits) when error_correction_level in @error_correction_level do
     version = 5
     n = byte_size(bin)
     n1 = n + 2
@@ -71,9 +78,9 @@ defmodule EQRCode.Encode do
       {:ok, 1}
   """
   @spec version(binary, SpecTable.error_correction_level()) :: {:error, :no_version_found} | {:ok, SpecTable.version()}
-  def version(bin, error_correction_level) do
+  def version(bin, error_correction_level, mode \\ :byte) do
     byte_size(bin)
-    |> SpecTable.find_version(error_correction_level)
+    |> SpecTable.find_version(error_correction_level, mode)
   end
 
   @doc """
