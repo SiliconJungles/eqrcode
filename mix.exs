@@ -2,7 +2,7 @@ defmodule EQRCode.MixProject do
   use Mix.Project
 
   @source_url "https://github.com/SiliconJungles/eqrcode"
-  @version "0.1.8"
+  @version "0.1.9"
 
   def project do
     [
