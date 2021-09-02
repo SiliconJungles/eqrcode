@@ -234,7 +234,7 @@ defmodule EQRCode.Matrix do
       Stream.map(0b000..0b111, fn mask ->
         matrix =
           Enum.reduce(candidate, matrix, fn {coordinate, v}, acc ->
-            update(acc, coordinate, v ^^^ EQRCode.Mask.mask(mask, coordinate))
+            update(acc, coordinate, bxor(v, EQRCode.Mask.mask(mask, coordinate)))
           end)
 
         {mask, EQRCode.Mask.score(matrix), matrix}
@@ -260,7 +260,7 @@ defmodule EQRCode.Matrix do
       |> Stream.filter(&available?(matrix, &1))
       |> Stream.zip(EQRCode.Encode.bits(data))
       |> Enum.reduce(matrix, fn {coordinate, v}, acc ->
-        update(acc, coordinate, v ^^^ EQRCode.Mask.mask(0, coordinate))
+        update(acc, coordinate, bxor(v, EQRCode.Mask.mask(0, coordinate)))
       end)
 
     %{m | matrix: matrix, mask: 0}

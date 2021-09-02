@@ -60,7 +60,7 @@ defmodule EQRCode.Encode do
   defp xor(_, <<>>), do: <<>>
 
   defp xor(<<a::1, t1::bits>>, <<b::1, t2::bits>>) do
-    <<a ^^^ b::1, xor(t1, t2)::bits>>
+    <<bxor(a, b)::1, xor(t1, t2)::bits>>
   end
 
   @doc """

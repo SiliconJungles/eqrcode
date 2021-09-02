@@ -25,7 +25,7 @@ defmodule EQRCode.GaloisField do
 
   Stream.iterate({1, 0}, fn {e, i} ->
     n = e <<< 1
-    {if(n >= 256, do: n ^^^ 0b100011101, else: n), i + 1}
+    {if(n >= 256, do: bxor(n, 0b100011101), else: n), i + 1}
   end)
   |> Enum.take(256)
   |> Enum.map(fn {e, i} ->
