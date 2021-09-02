@@ -36,6 +36,10 @@ defmodule EQRCode do
     raise(ArgumentError, message: "you must pass in some input")
   end
 
+  def encode(bin, _error_correction_level) when is_list(bin) do
+    raise(ArgumentError, message: "You have passed a list instead of string. Did you pass in a charlist by mistake?")
+  end
+
   def encode(_, _),
     do: raise(ArgumentError, message: "your input is too long. keep it under 2952 characters")
 
