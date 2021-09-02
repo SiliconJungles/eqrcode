@@ -101,12 +101,12 @@ defmodule EQRCode.SVG do
     |> Map.put(:height, 1)
     |> Map.put(:style, "fill: transparent;")
     |> Map.put(:width, 1)
-    |> Map.put(:x, row_num)
-    |> Map.put(:y, col_num)
+    |> Map.put(:x, col_num)
+    |> Map.put(:y, row_num)
     |> draw_rect
   end
 
-  # This pattern match ensures that the QR Codes positional markers are drawn 
+  # This pattern match ensures that the QR Codes positional markers are drawn
   # as rectangles, regardless of the shape
   defp substitute(1, row_num, col_num, %{color: color, size: size})
        when (row_num <= 8 and col_num <= 8) or
@@ -125,8 +125,8 @@ defmodule EQRCode.SVG do
     radius = 0.5
 
     %{}
-    |> Map.put(:cx, row_num + radius)
-    |> Map.put(:cy, col_num + radius)
+    |> Map.put(:cx, col_num + radius)
+    |> Map.put(:cy, row_num + radius)
     |> Map.put(:r, radius)
     |> Map.put(:style, "fill:#{color};")
     |> draw_circle
@@ -137,8 +137,8 @@ defmodule EQRCode.SVG do
     |> Map.put(:height, 1)
     |> Map.put(:style, "fill:#{color};")
     |> Map.put(:width, 1)
-    |> Map.put(:x, row_num)
-    |> Map.put(:y, col_num)
+    |> Map.put(:x, col_num)
+    |> Map.put(:y, row_num)
     |> draw_rect
   end
 
