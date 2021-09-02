@@ -14,7 +14,8 @@ defmodule EQRCode.Encode do
   @doc """
   Encode the binary.
 
-  Example:
+  ## Examples
+
       iex> EQRCode.Encode.encode("hello world!", :l)
       {1, :l, [0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1,
        0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1,
@@ -22,9 +23,12 @@ defmodule EQRCode.Encode do
        1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0,
        0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1,
        1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0]}
+
   """
-  @spec encode(binary, SpecTable.error_correction_level()) :: {SpecTable.version(), SpecTable.error_correction_level(), [0 | 1]}
-  def encode(bin, error_correction_level) when error_correction_level in @error_correction_level do
+  @spec encode(binary, SpecTable.error_correction_level()) ::
+          {SpecTable.version(), SpecTable.error_correction_level(), [0 | 1]}
+  def encode(bin, error_correction_level)
+      when error_correction_level in @error_correction_level do
     {:ok, version} = version(bin, error_correction_level)
     cci_len = SpecTable.character_count_indicator_bits(version, error_correction_level)
     mode = SpecTable.mode_indicator()
@@ -38,8 +42,10 @@ defmodule EQRCode.Encode do
   end
 
   # Encode the binary with custom pattern bits.
-  @spec encode(binary, SpecTable.error_correction_level(), bitstring) :: {SpecTable.version(), SpecTable.error_correction_level(), [0 | 1]}
-  def encode(bin, error_correction_level, bits) when error_correction_level in @error_correction_level do
+  @spec encode(binary, SpecTable.error_correction_level(), bitstring) ::
+          {SpecTable.version(), SpecTable.error_correction_level(), [0 | 1]}
+  def encode(bin, error_correction_level, bits)
+      when error_correction_level in @error_correction_level do
     version = 5
     n = byte_size(bin)
     n1 = n + 2
@@ -66,11 +72,14 @@ defmodule EQRCode.Encode do
   @doc """
   Returns the lowest version for the given binary.
 
-  Example:
+  ## Examples
+
       iex> EQRCode.Encode.version("hello world!", :l)
       {:ok, 1}
+
   """
-  @spec version(binary, SpecTable.error_correction_level()) :: {:error, :no_version_found} | {:ok, SpecTable.version()}
+  @spec version(binary, SpecTable.error_correction_level()) ::
+          {:error, :no_version_found} | {:ok, SpecTable.version()}
   def version(bin, error_correction_level) do
     byte_size(bin)
     |> SpecTable.find_version(error_correction_level)
@@ -79,9 +88,11 @@ defmodule EQRCode.Encode do
   @doc """
   Returns bits for any binary data.
 
-  Example:
+  ## Examples
+
       iex> EQRCode.Encode.bits(<<123, 4>>)
       [0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0]
+
   """
   @spec bits(bitstring) :: [0 | 1]
   def bits(bin) do

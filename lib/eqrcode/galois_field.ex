@@ -20,9 +20,11 @@ defmodule EQRCode.GaloisField do
   @doc """
   Given alpha exponent returns integer.
 
-  Example:
+  ## Examples
+
       iex> EQRCode.GaloisField.to_i(1)
       2
+
   """
   @spec to_i(integer) :: integer
   def to_i(alpha), do: @gf256_to_i[alpha]
@@ -30,9 +32,11 @@ defmodule EQRCode.GaloisField do
   @doc """
   Given integer returns alpha exponent.
 
-  Example:
+  ## Examples
+
       iex> EQRCode.GaloisField.to_a(2)
       1
+
   """
   @spec to_a(integer) :: integer
   def to_a(integer), do: @gf256_to_a[integer]
