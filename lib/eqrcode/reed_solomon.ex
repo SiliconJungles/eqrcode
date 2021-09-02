@@ -24,7 +24,7 @@ defmodule EQRCode.ReedSolomon do
     rest =
       Stream.zip(rest, tl(e))
       |> Enum.map(fn {x, y} ->
-        (bxor(EQRCode.GaloisField.to_i(x), EQRCode.GaloisField.to_i(y)))
+        bxor(EQRCode.GaloisField.to_i(x),  EQRCode.GaloisField.to_i(y))
         |> EQRCode.GaloisField.to_a()
       end)
 
