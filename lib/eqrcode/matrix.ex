@@ -279,8 +279,8 @@ defmodule EQRCode.Matrix do
   defp path(:up, {x, y}),
     do:
       for(
-        i <- x..0,
-        j <- y..(y - 1),
+        i <- x..0//-1,
+        j <- y..(y - 1)//-1,
         do: {i, j}
       )
 
@@ -288,7 +288,7 @@ defmodule EQRCode.Matrix do
     do:
       for(
         i <- 0..x,
-        j <- y..(y - 1),
+        j <- y..(y - 1)//-1,
         do: {i, j}
       )
 
@@ -405,8 +405,13 @@ defmodule EQRCode.Matrix do
   """
   @spec shape(coordinate, {integer, integer}) :: [coordinate]
   def shape({x, y}, {w, h}) do
-    for i <- x..(x + h - 1),
-        j <- y..(y + w - 1),
+    x_limit = x + h - 1
+    y_limit = y + w - 1
+    x_step = if x <= x_limit, do: 1, else: -1
+    y_step = if y <= y_limit, do: 1, else: -1
+
+    for i <- x..x_limit//x_step,
+        j <- y..y_limit//y_step,
         do: {i, j}
   end
 
