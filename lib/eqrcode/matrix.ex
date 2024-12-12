@@ -373,16 +373,20 @@ defmodule EQRCode.Matrix do
     matrix =
       Enum.reduce(0..(modules - 1), matrix, fn i, acc ->
         update_in(acc, [Access.elem(i)], fn row ->
-          Tuple.insert_at(row, 0, 0)
+          row_size = tuple_size(row)
+
+          row
           |> Tuple.insert_at(0, 0)
-          |> Tuple.append(0)
-          |> Tuple.append(0)
+          |> Tuple.insert_at(0, 0)
+          |> Tuple.insert_at(row_size + 2, 0)
+          |> Tuple.insert_at(row_size + 3, 0)
         end)
       end)
       |> Tuple.insert_at(0, zone)
       |> Tuple.insert_at(0, zone)
-      |> Tuple.append(zone)
-      |> Tuple.append(zone)
+
+    matrix = Tuple.insert_at(matrix, tuple_size(matrix), zone)
+    matrix = Tuple.insert_at(matrix, tuple_size(matrix), zone)
 
     %{m | matrix: matrix}
   end
