@@ -46,11 +46,13 @@ defmodule EQRCodeTest do
     end
 
     test "should return error when the input is a charlist" do
-      charlist = 'this_is_a_charlist'
+      charlist = ~c"this_is_a_charlist"
 
-      assert_raise ArgumentError, "You have passed a list instead of string. Did you pass in a charlist by mistake?", fn ->
-        charlist |> EQRCode.encode()
-      end
+      assert_raise ArgumentError,
+                   "You have passed a list instead of string. Did you pass in a charlist by mistake?",
+                   fn ->
+                     charlist |> EQRCode.encode()
+                   end
     end
   end
 end
