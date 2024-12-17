@@ -7,7 +7,7 @@ Simple QR Code Generator written in Elixir with no other dependencies.
 ```elixir
 def deps do
   [
-    {:eqrcode, "~> 0.1.10"}
+    {:eqrcode, "~> 0.2.0"}
   ]
 end
 ```
@@ -105,7 +105,7 @@ We reused most of the code from [sunboshan/qrcode](https://github.com/sunboshan/
 
 ## Copyright and License
 
-Copyright (c) 2014 Silicon Jungles
+Copyright (c) 2024 Silicon Jungles
 
 This library is released under the MIT License. See the
 [LICENSE.md](./LICENSE.md) file.

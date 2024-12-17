@@ -2,7 +2,7 @@ defmodule EQRCode.MixProject do
   use Mix.Project
 
   @source_url "https://github.com/SiliconJungles/eqrcode"
-  @version "0.1.10"
+  @version "0.2.0"
 
   def project do
     [
@@ -28,7 +28,7 @@ defmodule EQRCode.MixProject do
     [
       description: "Simple QRCode Generator in Elixir",
       licenses: ["MIT"],
-      maintainers: ["siliconavengers"],
+      maintainers: ["siliconavengers", "nthock"],
       links: %{
         "GitHub" => @source_url
       }
