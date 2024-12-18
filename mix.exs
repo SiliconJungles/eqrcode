@@ -43,6 +43,7 @@ defmodule EQRCode.MixProject do
       ],
       main: "readme",
       source_url: @source_url,
+      source_ref: "v#{@version}",
       assets: "assets",
       formatters: ["html"]
     ]
