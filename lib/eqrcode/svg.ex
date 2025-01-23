@@ -101,11 +101,11 @@ defmodule EQRCode.SVG do
     |> Enum.to_list()
   end
 
-  defp substitute(data, row_num, col_num, %{})
+  defp substitute(data, row_num, col_num, %{background_color: background_color})
        when is_nil(data) or data == 0 do
     %{}
     |> Map.put(:height, 1)
-    |> Map.put(:style, "fill: transparent;")
+    |> Map.put(:style, "fill: #{background_color};")
     |> Map.put(:width, 1)
     |> Map.put(:x, col_num)
     |> Map.put(:y, row_num)
@@ -120,7 +120,7 @@ defmodule EQRCode.SVG do
               (row_num <= 8 and col_num >= size - 9) do
     %{}
     |> Map.put(:height, 1)
-    |> Map.put(:style, "fill:#{color};")
+    |> Map.put(:style, "fill: #{color};")
     |> Map.put(:width, 1)
     |> Map.put(:x, col_num)
     |> Map.put(:y, row_num)
@@ -134,14 +134,14 @@ defmodule EQRCode.SVG do
     |> Map.put(:cx, col_num + radius)
     |> Map.put(:cy, row_num + radius)
     |> Map.put(:r, radius)
-    |> Map.put(:style, "fill:#{color};")
+    |> Map.put(:style, "fill: #{color};")
     |> draw_circle
   end
 
   defp substitute(1, row_num, col_num, %{color: color}) do
     %{}
     |> Map.put(:height, 1)
-    |> Map.put(:style, "fill:#{color};")
+    |> Map.put(:style, "fill: #{color};")
     |> Map.put(:width, 1)
     |> Map.put(:x, col_num)
     |> Map.put(:y, row_num)
