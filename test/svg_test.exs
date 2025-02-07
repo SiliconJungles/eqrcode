@@ -27,7 +27,11 @@ defmodule EQRCode.SVGTest do
       ## Test transparency in HTML
       |> build_svgs(qr, "Transparent", background_color: :transparent, color: color)
       ## Test ViewBox
-      |> build_svgs(qr, "ViewBox", background_color: background_color, color: color, viewbox: true)
+      |> build_svgs(qr, "ViewBox",
+        background_color: background_color,
+        color: color,
+        viewbox: true
+      )
       ## Test transparent viewbox in HTML
       |> build_svgs(qr, "Transparent ViewBox",
         background_color: :transparent,

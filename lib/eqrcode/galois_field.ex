@@ -3,16 +3,14 @@ defmodule EQRCode.GaloisField do
 
   import Bitwise
 
-  @gf256 (
-    Stream.iterate({1, 0}, fn {e, i} ->
-      n = e <<< 1
-      {if(n >= 256, do: bxor(n, 0b100011101), else: n), i + 1}
-    end)
-    |> Enum.take(256)
-    |> Enum.reduce({%{}, %{}}, fn {e, i}, {to_i, to_a} ->
-      {Map.put(to_i, i, e), Map.put_new(to_a, e, i)}
-    end)
-  )
+  @gf256 Stream.iterate({1, 0}, fn {e, i} ->
+           n = e <<< 1
+           {if(n >= 256, do: bxor(n, 0b100011101), else: n), i + 1}
+         end)
+         |> Enum.take(256)
+         |> Enum.reduce({%{}, %{}}, fn {e, i}, {to_i, to_a} ->
+           {Map.put(to_i, i, e), Map.put_new(to_a, e, i)}
+         end)
 
   @gf256_to_i elem(@gf256, 0)
   @gf256_to_a elem(@gf256, 1)
