@@ -24,6 +24,10 @@ defmodule EQRCode.SVG do
   * `:viewbox` - When set to `true`, the SVG element will specify its height and
     width using `viewBox`, instead of explicit `height` and `width` tags.
 
+  * `:id` - An id to add to the svg
+
+  * `:class` - HTML classes to apply to the svg
+
   Default options are `[color: "#000", shape: "square", background_color: "#FFF"]`.
 
   ## Examples
@@ -39,20 +43,31 @@ defmodule EQRCode.SVG do
     matrix_size = Matrix.size(m)
     svg_options = options |> Map.new() |> set_svg_options(matrix_size)
     dimension = matrix_size * svg_options[:module_size]
-
     xml_tag = ~s(<?xml version="1.0" standalone="yes"?>)
-    viewbox_attr = ~s(viewBox="0 0 #{matrix_size} #{matrix_size}")
 
-    dimension_attrs =
-      if Keyword.get(options, :viewbox, false) do
-        viewbox_attr
-      else
-        ~s(width="#{dimension}" height="#{dimension}" #{viewbox_attr})
-      end
+    attrs =
+      [
+        {:version, "1.1"},
+        {:xmlns, "http://www.w3.org/2000/svg"},
+        {:"xmlns:xlink", "http://www.w3.org/1999/xlink"},
+        {:"xmlns:ev", "http://www.w3.org/2001/xml-events"},
+        {:viewBox, "0 0 #{matrix_size} #{matrix_size}"},
+        {:"shape-rendering", "crispEdges"},
+        {:style, "background-color: #{svg_options[:background_color]}"}
+        | Keyword.take(options, [:id, :class])
+      ]
+      |> then(fn attrs ->
+        if Keyword.get(options, :viewbox, false) do
+          attrs
+        else
+          [{:width, dimension}, {:height, dimension} | attrs]
+        end
+      end)
+      |> Enum.map(fn {key, val} -> ~s(#{key}="#{val}") end)
+      |> Enum.join(" ")
 
     open_tag =
-      ~s(<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" #{dimension_attrs}
-      shape-rendering="crispEdges" style="background-color: #{svg_options[:background_color]}">)
+      ~s(<svg #{attrs}>)
 
     close_tag = ~s(</svg>)
 
