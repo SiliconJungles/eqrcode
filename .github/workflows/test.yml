@@ -1,0 +1,45 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  build_linux:
+    name: Build and test on Linux
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        otp: ['25.3', '26.2', '27.2.1']
+        elixir: ['1.15.7', '1.16.3', '1.17.2', '1.18.2']
+        exclude:
+          - otp: '27.2.1'
+            elixir: '1.15.7'
+          - otp: '27.2.1'
+            elixir: '1.16.3'
+          - otp: '26.2'
+            elixir: '1.18.2'
+    env:
+      MIX_ENV: test
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup beam
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{matrix.otp}}
+          elixir-version: ${{matrix.elixir}}
+          install-hex: true
+          install-rebar: true
+
+      - name: Setup Elixir Project
+        run: mix deps.get
+
+      - name: Check format
+        run: mix format --check-formatted
+
+      - name: Run Tests
+        run: mix test --warnings-as-errors
