@@ -37,7 +37,9 @@ defmodule EQRCode do
   end
 
   def encode(bin, _error_correction_level) when is_list(bin) do
-    raise(ArgumentError, message: "You have passed a list instead of string. Did you pass in a charlist by mistake?")
+    raise(ArgumentError,
+      message: "You have passed a list instead of string. Did you pass in a charlist by mistake?"
+    )
   end
 
   def encode(_, _),
