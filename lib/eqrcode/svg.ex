@@ -34,8 +34,13 @@ defmodule EQRCode.SVG do
 
   """
   @spec svg(Matrix.t(), map() | Keyword.t()) :: String.t()
-  def svg(%Matrix{matrix: matrix} = m, options \\ []) do
-    options = options |> Enum.map(& &1)
+  def svg(m, options \\ [])
+
+  def svg(%Matrix{} = m, options) when is_map(options) do
+    svg(m, Map.to_list(options))
+  end
+
+  def svg(%Matrix{matrix: matrix} = m, options) when is_list(options) do
     matrix_size = Matrix.size(m)
     svg_options = options |> Map.new() |> set_svg_options(matrix_size)
     dimension = matrix_size * svg_options[:module_size]
