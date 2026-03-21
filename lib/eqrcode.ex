@@ -74,5 +74,5 @@ defmodule EQRCode do
 
   defdelegate png(matrix, options \\ []), to: EQRCode.PNG
 
-  defdelegate render(matrix), to: EQRCode.Render
+  defdelegate render(matrix, opts \\ []), to: EQRCode.Render
 end
