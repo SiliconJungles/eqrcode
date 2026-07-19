@@ -85,7 +85,57 @@ defmodule EQRCode.SVG do
       end)
       |> Enum.to_list()
 
-    Enum.join([xml_tag, open_tag, result, close_tag], "\n")
+    image_tag =
+      if inner_image = svg_options[:inner_image] do
+        p = svg_options[:inner_image_size]
+        padding = svg_options[:inner_image_padding]
+
+        {w, h, x, y, bg_w, bg_h, bg_x, bg_y} =
+          if svg_options[:align_to_grid] do
+            # Round the image width and height to be divisible by the block size (1 module)
+            # We round to the nearest odd integer so that centering aligns exactly on block boundaries.
+            w_rounded = round_to_odd(matrix_size * p)
+            x_rounded = (matrix_size - w_rounded) / 2
+
+            # Round the quiet zone padding per side to the nearest integer number of blocks
+            padding_blocks = if padding > 0.0, do: ceil(matrix_size * padding), else: 0
+
+            # Background size is w_rounded + 2 * padding_blocks, which guarantees it remains odd and aligns perfectly to the grid.
+            bg_w_rounded = w_rounded + padding_blocks * 2
+            bg_x_rounded = (matrix_size - bg_w_rounded) / 2
+
+            {w_rounded, w_rounded, x_rounded, x_rounded, bg_w_rounded, bg_w_rounded, bg_x_rounded, bg_x_rounded}
+          else
+            w_raw = matrix_size * p
+            x_raw = (matrix_size - w_raw) / 2
+
+            bg_w_raw = w_raw + (matrix_size * padding * 2)
+            bg_x_raw = (matrix_size - bg_w_raw) / 2
+
+            {w_raw, w_raw, x_raw, x_raw, bg_w_raw, bg_w_raw, bg_x_raw, bg_x_raw}
+          end
+
+        bg_rect =
+          if svg_options[:background_color] not in [:transparent, "transparent"] do
+            ~s(<rect x="#{bg_x}" y="#{bg_y}" width="#{bg_w}" height="#{bg_h}" fill="#{svg_options[:background_color]}"/>\n)
+          else
+            ""
+          end
+
+        image_element = ~s(<image href="#{inner_image}" x="#{x}" y="#{y}" width="#{w}" height="#{h}"/>)
+        bg_rect <> image_element
+      else
+        ""
+      end
+
+    elements =
+      if image_tag != "" do
+        [xml_tag, open_tag, result, image_tag, close_tag]
+      else
+        [xml_tag, open_tag, result, close_tag]
+      end
+
+    Enum.join(elements, "\n")
   end
 
   defp set_svg_options(options, matrix_size) do
@@ -95,6 +145,40 @@ defmodule EQRCode.SVG do
     |> set_module_size(matrix_size)
     |> Map.put_new(:shape, "rectangle")
     |> Map.put_new(:size, matrix_size)
+    |> set_image_options()
+  end
+
+  defp set_image_options(options) do
+    inner_image = options[:inner_image]
+    inner_image_size = options[:inner_image_size] || 0.15
+    inner_image_padding = options[:inner_image_padding]  || 0.0
+    align_to_grid = Map.get(options, :align_to_grid, true)
+
+    options
+    |> Map.put(:inner_image, inner_image)
+    |> Map.put(:inner_image_size, normalize_image_size(inner_image_size))
+    |> Map.put(:inner_image_padding, normalize_image_size(inner_image_padding))
+    |> Map.put(:align_to_grid, align_to_grid)
+  end
+
+  defp normalize_image_size(size) when is_float(size) do
+    if size >= 1.0 do
+      size / 100
+    else
+      size
+    end
+  end
+
+  defp normalize_image_size(_), do: 0.15
+
+  defp round_to_odd(value) do
+    r = round(value)
+    r = if rem(r, 2) == 0 do
+      if value > r, do: r + 1, else: r - 1
+    else
+      r
+    end
+    max(r, 1)
   end
 
   defp set_module_size(%{width: width} = options, matrix_size) when is_integer(width) do

@@ -73,6 +73,17 @@ You can specify the following attributes of the QR code:
 * `viewbox`: When set to `true`, the SVG element will specify its height and
   width using `viewBox`, instead of explicit `height` and `width` tags.
 
+* `inner_image`: The URL, path, or base64 data URI of the image to embed in the centre of the QR code.
+
+* `inner_image_size`: The size of the logo in the centre of the QR code (expressed as a fraction of the QR code size, e.g. `0.15` for 15%). The default is `0.15`.
+
+* `inner_image_padding`: The size of the quiet zone padding around the logo (expressed as a fraction of the QR code size, e.g. `0.02` for 2%). The default is `0.0`.
+
+* `align_to_grid`: A boolean option that controls whether the central image size and quiet zone padding are rounded to whole numbers of module blocks (divisible by block size). When `true`, it ensures perfect grid boundaries and scanner readability. The default is `true`.
+
+> [!NOTE]
+> When embedding an image in the centre of a QR code, it is recommended to encode the QR code with High error correction level `:h` to ensure scan readability (e.g. `EQRCode.encode(content, :h)`).
+
 Default options are `[color: "#000", shape: "square", background_color: "#FFF"]`.
 
 ### PNG
