@@ -7,7 +7,7 @@ Simple QR Code Generator written in Elixir with no other dependencies.
 ```elixir
 def deps do
   [
-    {:eqrcode, "~> 0.2.0"}
+    {:eqrcode, "~> 0.3.0"}
   ]
 end
 ```
@@ -73,6 +73,10 @@ You can specify the following attributes of the QR code:
 * `viewbox`: When set to `true`, the SVG element will specify its height and
   width using `viewBox`, instead of explicit `height` and `width` tags.
 
+* `id`: An `id` attribute to add to the SVG element.
+
+* `class`: HTML classes to add to the SVG element.
+
 Default options are `[color: "#000", shape: "square", background_color: "#FFF"]`.
 
 ### PNG
@@ -89,9 +93,9 @@ You can specify the following attributes of the QR code:
 
 By default, QR code size will be dynamically generated based on the input string.
 
-### ASCII
+### Terminal
 
-You can also render the QRCode in your console:
+You can also render the QR code in your terminal:
 
 ```elixir
 qr_code_content
@@ -99,13 +103,34 @@ qr_code_content
 |> EQRCode.render()
 ```
 
+The default output uses two characters per module, so large codes can get
+wide. Pass `compact: true` to draw two rows per line with Unicode half-block
+characters, which makes the code about a quarter of the size:
+
+```elixir
+qr_code_content
+|> EQRCode.encode()
+|> EQRCode.render(compact: true)
+```
+
+`EQRCode.render/2` accepts the following options:
+
+* `compact`: When `true`, render with Unicode half-block characters (`▀`, `▄`,
+  `█`). The default is `false`.
+
+* `inverse`: When `true`, swap the dark and light colors. The default is
+  `false`. Some QR code scanners cannot read inverted codes, so leave this off
+  unless you need it.
+
+Passing an unknown option raises an `ArgumentError`.
+
 ## Credits
 
 We reused most of the code from [sunboshan/qrcode](https://github.com/sunboshan/qrcode) to generate the matrix required to render the QR Code. We also reference [rqrcode](https://github.com/whomwah/rqrcode) on how to generate SVG from the QR Code matrix.
 
 ## Copyright and License
 
-Copyright (c) 2024 Silicon Jungles
+Copyright (c) 2026 Silicon Jungles
 
 This library is released under the MIT License. See the
 [LICENSE.md](./LICENSE.md) file.

@@ -65,7 +65,7 @@ defmodule EQRCode.Render do
   defp block_char(_, _), do: " "
 
   @doc """
-  Rotate the QR Code 90 degree clockwise and render to terminal. 
+  Rotate the QR Code 90 degree clockwise and render to terminal.
   """
   @spec render2(EQRCode.Matrix.t(), keyword()) :: :ok
   def render2(%EQRCode.Matrix{matrix: matrix}, opts \\ []) when is_list(opts) do

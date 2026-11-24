@@ -2,13 +2,13 @@ defmodule EQRCode.MixProject do
   use Mix.Project
 
   @source_url "https://github.com/SiliconJungles/eqrcode"
-  @version "0.2.1"
+  @version "0.3.0"
 
   def project do
     [
       app: :eqrcode,
       version: @version,
-      elixir: "~> 1.6",
+      elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
       name: "EQRCode",
       package: package(),
@@ -38,6 +38,7 @@ defmodule EQRCode.MixProject do
   defp docs do
     [
       extras: [
+        "CHANGELOG.md": [title: "Changelog"],
         "LICENSE.md": [title: "License"],
         "README.md": [title: "Overview"]
       ],
