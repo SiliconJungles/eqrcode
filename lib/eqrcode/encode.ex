@@ -52,7 +52,8 @@ defmodule EQRCode.Encode do
     n2 = SpecTable.code_words_len(version, error_correction_level) - n1
     cci_len = SpecTable.character_count_indicator_bits(version, error_correction_level)
     mode = SpecTable.mode_indicator()
-    <<_::binary-size(n1), mask::binary-size(n2), _::binary>> = @mask0
+    true = n2 >= 0
+    mask = binary_part(@mask0, n1, n2)
 
     encoded =
       <<mode::4, n::size(cci_len), bin::binary-size(n), 0::4, xor(bits, mask)::bits>>
